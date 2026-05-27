@@ -102,12 +102,9 @@
             </div>
 
             <div id="profesor-next-class-card" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl hidden">
-                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Próxima Clase (Ticket)</p>
-                <div id="profesor-next-class-status-div" class="p-3 rounded-xl border mb-3 transition-colors">
-                    <p id="profesor-next-student-name" class="font-extrabold text-white"></p>
-                    <p class="text-xs text-slate-400 mt-1">Hora: <span id="profesor-next-time" class="font-bold text-slate-200">--:--</span></p>
-                </div>
-                <button id="btn-toggle-ticket" class="w-full py-2 rounded-xl text-xs font-black transition-all shadow-lg"></button>
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-3">Clases Reservadas Hoy</p>
+                <div id="ticket-list-container" class="space-y-2">
+                    </div>
             </div>
 
             <div id="next-class-card" class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-xs text-amber-400 shadow-lg hidden">
@@ -125,22 +122,20 @@
                 
                 <div class="flex items-center justify-between bg-slate-900 border border-slate-800 p-2 rounded-xl mb-4">
                     <button id="btn-prev-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all">
-                        <i class="fa-solid fa-chevron-left mr-1"></i> Semana Anterior
+                        <i class="fa-solid fa-chevron-left mr-1"></i> Anterior
                     </button>
                     <div class="text-center">
                         <span id="month-display" class="block text-sm font-black text-amber-500 uppercase tracking-widest">MES AÑO</span>
                     </div>
                     <button id="btn-next-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all">
-                        Semana Siguiente <i class="fa-solid fa-chevron-right ml-1"></i>
+                        Siguiente <i class="fa-solid fa-chevron-right ml-1"></i>
                     </button>
                 </div>
 
                 <div class="overflow-x-auto scrollbar-hide border border-slate-800 rounded-xl bg-slate-900">
                     <div class="min-w-[800px]">
-                        <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 bg-slate-950 text-slate-300 font-bold text-xs text-center">
-                            </div>
-                        <div id="calendar-grid" class="divide-y divide-slate-800">
-                            </div>
+                        <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 bg-slate-950 text-slate-300 font-bold text-xs text-center"></div>
+                        <div id="calendar-grid" class="divide-y divide-slate-800"></div>
                     </div>
                 </div>
 
@@ -164,61 +159,83 @@
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-4">
                 <h4 class="text-[10px] text-slate-400 font-bold mb-3 uppercase tracking-wider">Añadir Nuevo Alumno</h4>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
-                    <input id="new-std-user" type="text" placeholder="Usuario (ej: ana)" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500">
-                    <input id="new-std-name" type="text" placeholder="Nombre completo" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500">
-                    <input id="new-std-pin" type="text" placeholder="PIN (4 núm)" maxlength="4" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500 text-center tracking-widest">
+                    <input id="new-std-user" type="text" placeholder="Usuario" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500">
+                    <input id="new-std-name" type="text" placeholder="Nombre" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500">
+                    <input id="new-std-pin" type="text" placeholder="PIN" maxlength="4" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500 text-center tracking-widest">
                 </div>
-                <button id="btn-add-student" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2.5 rounded-lg text-xs transition-all shadow-lg">
-                    <i class="fa-solid fa-user-plus"></i> Crear Alumno
-                </button>
+                <button id="btn-add-student" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2.5 rounded-lg text-xs transition-all shadow-lg"><i class="fa-solid fa-user-plus"></i> Crear Alumno</button>
             </div>
 
             <div class="max-h-56 overflow-y-auto scrollbar-hide border border-slate-800 rounded-xl bg-slate-950">
                 <table class="w-full text-xs text-left text-slate-300">
                     <thead class="uppercase text-[9px] bg-slate-900 text-slate-500 sticky top-0">
-                        <tr>
-                            <th class="p-3">Usuario</th>
-                            <th class="p-3">Nombre Completo</th>
-                            <th class="p-3">PIN Acceso</th>
-                            <th class="p-3 text-center">Acción</th>
-                        </tr>
+                        <tr><th class="p-3">Usuario</th><th class="p-3">Nombre</th><th class="p-3">PIN</th><th class="p-3 text-center">Acción</th></tr>
                     </thead>
-                    <tbody id="student-list" class="divide-y divide-slate-800">
-                        </tbody>
+                    <tbody id="student-list" class="divide-y divide-slate-800"></tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <script>
-        // === 1. CONFIGURACIÓN DE HORARIOS ===
         const timeSlots = [
-            { id: "07:00", label: "07:00 - 07:45" },
-            { id: "07:45", label: "07:45 - 08:30" },
-            { id: "08:30", label: "08:30 - 09:15" },
-            { id: "09:15", label: "09:15 - 10:00" },
-            { id: "break", label: "10:00 - 10:30", isBreak: true }, 
-            { id: "10:30", label: "10:30 - 11:15" },
-            { id: "11:15", label: "11:15 - 12:00" },
-            { id: "12:00", label: "12:00 - 12:45" },
-            { id: "12:45", label: "12:45 - 13:30" },
-            { id: "13:30", label: "13:30 - 14:15" },
-            { id: "14:15", label: "14:15 - 15:00" },
-            { id: "15:00", label: "15:00 - 15:45" },
-            { id: "15:45", label: "15:45 - 16:30" }
+            { id: "07:00", label: "07:00 - 07:45" }, { id: "07:45", label: "07:45 - 08:30" }, { id: "08:30", label: "08:30 - 09:15" },
+            { id: "09:15", label: "09:15 - 10:00" }, { id: "break", label: "10:00 - 10:30", isBreak: true }, { id: "10:30", label: "10:30 - 11:15" },
+            { id: "11:15", label: "11:15 - 12:00" }, { id: "12:00", label: "12:00 - 12:45" }, { id: "12:45", label: "12:45 - 13:30" },
+            { id: "13:30", label: "13:30 - 14:15" }, { id: "14:15", label: "14:15 - 15:00" }, { id: "15:00", label: "15:00 - 15:45" }, { id: "15:45", label: "15:45 - 16:30" }
         ];
 
-        // === 2. BASE DE DATOS LOCAL ===
         let usersDB = JSON.parse(localStorage.getItem('autoescuela_users')) || {
             "profesor": { id: "profesor", name: "Profesor Administrador", role: "profesor", pin: "0000" },
             "juan": { id: "juan", name: "Juan Pérez", role: "alumno", pin: "1111" }
         };
         let reservationsDB = JSON.parse(localStorage.getItem('autoescuela_reservations')) || {};
-        
         let currentUser = null;
-        let viewDate = new Date(); 
+        let viewDate = new Date();
 
-        // === 3. LÓGICA DE TIEMPO Y 24 HORAS ===
+        // NAVEGACIÓN
+        document.getElementById('btn-prev-week').onclick = () => { viewDate.setDate(viewDate.getDate() - 7); renderCalendar(); };
+        document.getElementById('btn-next-week').onclick = () => { viewDate.setDate(viewDate.getDate() + 7); renderCalendar(); };
+
+        // SISTEMA TICKETS (MOSTRAR TODAS LAS CLASES DEL DÍA)
+        function updateTicketPanel() {
+            const profCard = document.getElementById('profesor-next-class-card');
+            const container = document.getElementById('ticket-list-container');
+            if (!currentUser || currentUser.role !== 'profesor') { profCard.classList.add('hidden'); return; }
+
+            const currentDayStr = viewDate.toISOString().split('T')[0];
+            const dailyClasses = Object.keys(reservationsDB)
+                .filter(id => id.startsWith(currentDayStr))
+                .sort((a, b) => a.split('_')[1].localeCompare(b.split('_')[1]));
+
+            if (dailyClasses.length > 0) {
+                container.innerHTML = dailyClasses.map(id => {
+                    const res = reservationsDB[id];
+                    return `
+                        <div class="p-3 rounded-lg border ${res.ticketEntregado ? 'border-emerald-500 bg-emerald-500/10' : 'border-red-500 bg-red-500/10'}">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-xs text-white">${usersDB[res.userId]?.name || 'Alumno'}</p>
+                                    <p class="text-[10px] text-slate-400">${id.split('_')[1]}</p>
+                                </div>
+                                <button onclick="toggleTicket('${id}')" class="text-[10px] font-bold p-1 rounded ${res.ticketEntregado ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}">
+                                    ${res.ticketEntregado ? '✔' : '✘'}
+                                </button>
+                            </div>
+                        </div>`;
+                }).join('');
+                profCard.classList.remove('hidden');
+            } else {
+                profCard.classList.add('hidden');
+            }
+        }
+
+        window.toggleTicket = (id) => {
+            reservationsDB[id].ticketEntregado = !reservationsDB[id].ticketEntregado;
+            saveData();
+        };
+
+        // RENDERIZADO CALENDARIO
         function getMonday(d) {
             const date = new Date(d);
             const day = date.getDay();
@@ -226,322 +243,64 @@
             return new Date(date.setDate(diff));
         }
 
-        function isMoreThan24hBusiness(targetDateStr, timeStr) {
-            const [hours, minutes] = timeStr.split(':');
-            const targetDate = new Date(targetDateStr);
-            targetDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-            const now = new Date(); 
-            if (targetDate <= now) return false; 
-
-            let hoursDiff = 0;
-            let calcDate = new Date(now);
-
-            while (calcDate < targetDate) {
-                calcDate.setHours(calcDate.getHours() + 1);
-                if (calcDate.getDay() !== 0 && calcDate.getDay() !== 6) {
-                    hoursDiff++;
-                }
-            }
-            return hoursDiff >= 24;
-        }
-
-        // === 4. RENDERIZADO VISUAL DEL CALENDARIO ===
         function renderCalendar() {
+            if (!currentUser) return; // Seguridad: no renderizar si no hay usuario
             const monday = getMonday(viewDate);
-            const days = [];
-            
             const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             document.getElementById('month-display').innerText = `${monthNames[monday.getMonth()]} ${monday.getFullYear()}`;
 
             let headersHtml = `<div class="py-3 border-r border-slate-800 flex items-center justify-center"><i class="fa-solid fa-clock text-slate-500"></i></div>`;
+            const days = [];
             for(let i=0; i<5; i++) {
-                let d = new Date(monday);
-                d.setDate(d.getDate() + i);
-                const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                const shortDay = d.toLocaleDateString('es-ES', {weekday: 'short'});
-                days.push({ dateObj: d, dateStr: dateStr, name: shortDay });
-                headersHtml += `<div class="py-2 border-r border-slate-800 uppercase tracking-wider">${shortDay} <br><span class="text-[10px] text-slate-500">${d.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'})}</span></div>`;
+                let d = new Date(monday); d.setDate(d.getDate() + i);
+                days.push({ dateStr: d.toISOString().split('T')[0], name: d.toLocaleDateString('es-ES', {weekday: 'short'}) });
+                headersHtml += `<div class="py-2 border-r border-slate-800 uppercase tracking-wider text-[10px]">${d.toLocaleDateString('es-ES', {weekday: 'short'})} <br>${d.getDate()}/${d.getMonth()+1}</div>`;
             }
             document.getElementById('calendar-headers').innerHTML = headersHtml;
 
             let gridHtml = '';
             timeSlots.forEach(slot => {
-                gridHtml += `<div class="grid grid-cols-6 hover:bg-slate-800/30 transition-colors">`;
-                gridHtml += `<div class="py-3 px-2 border-r border-slate-800 bg-slate-950/50 text-[11px] font-bold text-slate-400 text-center flex items-center justify-center">${slot.label}</div>`;
+                gridHtml += `<div class="grid grid-cols-6 hover:bg-slate-800/30 transition-colors">
+                    <div class="py-3 px-1 border-r border-slate-800 bg-slate-950/50 text-[10px] font-bold text-slate-400 text-center flex items-center justify-center">${slot.label}</div>`;
                 
                 if (slot.isBreak) {
-                    gridHtml += `<div class="col-span-5 bg-slate-950/80 border-y border-slate-800 flex items-center justify-center text-[11px] text-slate-600 font-bold tracking-widest uppercase"><i class="fa-solid fa-mug-hot mr-2 text-slate-700"></i> Descanso Programado</div>`;
+                    gridHtml += `<div class="col-span-5 bg-slate-950/80 border-y border-slate-800 flex items-center justify-center text-[10px] text-slate-600 font-bold uppercase"><i class="fa-solid fa-mug-hot mr-2"></i> Descanso</div>`;
                 } else {
                     days.forEach(day => {
-                        const cellId = `${day.dateStr}_${slot.id}`;
-                        const res = reservationsDB[cellId];
-                        
-                        const classRealDate = new Date(day.dateStr);
-                        classRealDate.setHours(parseInt(slot.id.split(':')[0]), parseInt(slot.id.split(':')[1]), 0, 0);
-                        const isPast = classRealDate < new Date();
-                        
-                        let cellClass = "border-r border-slate-800 p-2 min-h-[50px] flex items-center justify-center cursor-pointer transition-all ";
-                        let cellContent = "";
-
-                        // SOLUCIÓN AL BUG: Comprobar que currentUser exista
-                        if (res) {
-                            let isMyClass = currentUser && res.userId === currentUser.id;
-                            let isProf = currentUser && currentUser.role === 'profesor';
-
-                            if (isMyClass || isProf) {
-                                cellClass += "bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-[10px]";
-                                cellContent = isProf ? (usersDB[res.userId]?.name || "Desconocido") : "Tu Clase";
-                            } else {
-                                cellClass += "bg-slate-800 text-slate-600 cursor-not-allowed";
-                                cellContent = "Ocupado";
-                            }
-                        } else if (isPast) {
-                            cellClass += "bg-slate-950 opacity-50 cursor-not-allowed text-slate-700 text-[10px]";
-                            cellContent = "Pasado";
-                        } else {
-                            cellClass += "bg-emerald-500/10 hover:bg-emerald-500/30 border border-emerald-500/20 text-emerald-500 font-semibold text-[10px]";
-                            cellContent = "Libre";
-                        }
-
-                        gridHtml += `<div class="${cellClass}" onclick="handleCellClick('${cellId}', '${day.dateStr}', '${slot.id}', ${!!res}, ${isPast})">${cellContent}</div>`;
+                        const id = `${day.dateStr}_${slot.id}`;
+                        const res = reservationsDB[id];
+                        let css = "border-r border-slate-800 p-2 min-h-[50px] flex items-center justify-center cursor-pointer ";
+                        css += res ? (res.userId === currentUser.id || currentUser.role === 'profesor' ? 'bg-amber-500 text-black' : 'bg-slate-800') : 'bg-emerald-500/10 text-emerald-500';
+                        gridHtml += `<div class="${css} text-[10px]" onclick="handleCellClick('${id}')">${res ? (currentUser.role==='profesor' ? usersDB[res.userId].name : 'Reservado') : 'Libre'}</div>`;
                     });
                 }
                 gridHtml += `</div>`;
             });
             document.getElementById('calendar-grid').innerHTML = gridHtml;
-
-            renderNextClass();
             updateTicketPanel();
         }
 
-        // === PANEL DE TICKETS (PROFESOR) ===
-        function updateTicketPanel() {
-            const profCard = document.getElementById('profesor-next-class-card');
-            if (!currentUser || currentUser.role !== 'profesor') {
-                profCard.classList.add('hidden');
-                return;
-            }
-
-            let nextReservation = null;
-            const now = new Date();
-
-            let upcoming = [];
-            for (let cellId in reservationsDB) {
-                const res = reservationsDB[cellId];
-                const [dateStr, timeStr] = cellId.split('_');
-                const [hours, minutes] = timeStr.split(':');
-                const classDate = new Date(dateStr);
-                classDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-                if (classDate > now) {
-                    upcoming.push({ id: cellId, dateObj: classDate, ...res });
-                }
-            }
-
-            upcoming.sort((a, b) => a.dateObj - b.dateObj);
-            nextReservation = upcoming[0];
-
-            if (nextReservation) {
-                document.getElementById('profesor-next-student-name').innerText = usersDB[nextReservation.userId]?.name || "Alumno Desconocido";
-                document.getElementById('profesor-next-time').innerText = nextReservation.id.split('_')[1];
-                
-                const div = document.getElementById('profesor-next-class-status-div');
-                const btn = document.getElementById('btn-toggle-ticket');
-                
-                if (nextReservation.ticketEntregado) {
-                    div.className = "p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 mb-3 transition-colors";
-                    btn.className = "w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 py-2 rounded-xl text-xs font-black transition-all shadow-lg";
-                    btn.innerText = "✔ Ticket Entregado";
-                } else {
-                    div.className = "p-3 rounded-xl border border-red-500 bg-red-500/10 text-red-400 mb-3 transition-colors";
-                    btn.className = "w-full bg-red-500 hover:bg-red-600 text-slate-900 py-2 rounded-xl text-xs font-black transition-all shadow-lg";
-                    btn.innerText = "✘ Ticket Pendiente";
-                }
-                
-                btn.onclick = () => {
-                    reservationsDB[nextReservation.id].ticketEntregado = !nextReservation.ticketEntregado;
-                    saveData();
-                };
-                
-                profCard.classList.remove('hidden');
-            } else {
-                profCard.classList.add('hidden');
-            }
+        function handleCellClick(id) {
+            const res = reservationsDB[id];
+            if(res) { if(confirm("¿Cancelar?")) { delete reservationsDB[id]; saveData(); } }
+            else { if(confirm("¿Reservar?")) { reservationsDB[id] = {userId: currentUser.id, ticketEntregado: false}; saveData(); } }
         }
 
-        function renderNextClass() {
-            const card = document.getElementById('next-class-card');
-            
-            if (!currentUser || currentUser.role === 'profesor') {
-                card.classList.add('hidden');
-                return;
-            }
+        function saveData() { localStorage.setItem('autoescuela_reservations', JSON.stringify(reservationsDB)); renderCalendar(); }
 
-            let nextClass = null;
-            const now = new Date();
-
-            for (let cellId in reservationsDB) {
-                const res = reservationsDB[cellId];
-                if (res.userId === currentUser.id) {
-                    const [dateStr, timeStr] = cellId.split('_');
-                    const [hours, minutes] = timeStr.split(':');
-                    const classDate = new Date(dateStr);
-                    classDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-                    if (classDate > now) {
-                        if (!nextClass || classDate < nextClass.dateObj) {
-                            nextClass = {
-                                dateObj: classDate,
-                                dateDisplay: classDate.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'}),
-                                timeDisplay: timeStr
-                            };
-                        }
-                    }
-                }
-            }
-
-            if (nextClass) {
-                document.getElementById('next-class-time').innerText = nextClass.timeDisplay;
-                document.getElementById('next-class-date').innerText = nextClass.dateDisplay;
-                card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
-        }
-
-        // === EVENTOS DE NAVEGACIÓN ===
-        document.getElementById('btn-prev-week').addEventListener('click', () => {
-            viewDate.setDate(viewDate.getDate() - 7);
-            renderCalendar();
-        });
-
-        document.getElementById('btn-next-week').addEventListener('click', () => {
-            viewDate.setDate(viewDate.getDate() + 7);
-            renderCalendar();
-        });
-
-        // === 5. GESTIÓN DE RESERVAS ===
-        function handleCellClick(cellId, dateStr, timeStr, isBooked, isPast) {
-            if (!currentUser) return;
-
-            if (isPast && currentUser.role !== 'profesor') return;
-            
-            const res = reservationsDB[cellId];
-            if (isBooked && res && res.userId !== currentUser.id && currentUser.role !== 'profesor') return;
-
-            const is24hSafe = isMoreThan24hBusiness(dateStr, timeStr);
-
-            if (!isBooked) {
-                if (!is24hSafe && currentUser.role !== 'profesor') {
-                    alert("⚠️ ALERTA: No puedes reservar con menos de 24 horas laborables de antelación.");
-                    return;
-                }
-                if (confirm(`¿Confirmar reserva para el día ${dateStr} a las ${timeStr}?`)) {
-                    reservationsDB[cellId] = { userId: currentUser.id, ticketEntregado: false };
-                    saveData();
-                }
-            } else {
-                if (!is24hSafe && currentUser.role !== 'profesor') {
-                    alert("⚠️ ALERTA: No puedes cancelar una clase que empieza en menos de 24 horas laborables.");
-                    return;
-                }
-                const msg = currentUser.role === 'profesor' ? `¿Liberar clase de ${usersDB[res.userId]?.name}?` : `¿Seguro que deseas cancelar tu clase?`;
-                if (confirm(msg)) {
-                    delete reservationsDB[cellId];
-                    saveData();
-                }
-            }
-        }
-
-        // === 6. GESTIÓN DE ALUMNOS (PANEL PROFESOR) ===
-        document.getElementById('btn-manage-students').onclick = () => {
-            renderStudentList();
-            document.getElementById('modal-students').classList.remove('hidden');
-        }
-        
-        function renderStudentList() {
-            let html = '';
-            Object.values(usersDB).forEach(u => {
-                if(u.role === 'alumno') {
-                    html += `<tr class="hover:bg-slate-800/50">
-                        <td class="p-3 font-mono text-slate-300">${u.id}</td>
-                        <td class="p-3 font-semibold text-white">${u.name}</td>
-                        <td class="p-3 font-mono tracking-widest text-amber-500 font-bold">${u.pin}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="deleteStudent('${u.id}')" class="text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded border border-red-500/20 transition-all" title="Eliminar Alumno">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>`;
-                }
-            });
-            document.getElementById('student-list').innerHTML = html;
-        }
-
-        document.getElementById('btn-add-student').onclick = () => {
-            const id = document.getElementById('new-std-user').value.toLowerCase().trim();
-            const name = document.getElementById('new-std-name').value.trim();
-            const pin = document.getElementById('new-std-pin').value.trim();
-            
-            if(!id || !name || pin.length !== 4) return alert("Completa todos los datos. El PIN debe tener 4 dígitos.");
-            if(usersDB[id]) return alert("Este nombre de usuario ya está registrado.");
-
-            usersDB[id] = { id, name, role: 'alumno', pin };
-            saveData();
-            
-            document.getElementById('new-std-user').value = '';
-            document.getElementById('new-std-name').value = '';
-            document.getElementById('new-std-pin').value = '';
-            
-            renderStudentList();
-        };
-
-        window.deleteStudent = (id) => {
-            if(confirm(`¿Eliminar al alumno ${usersDB[id].name}?`)) {
-                delete usersDB[id];
-                for(let key in reservationsDB) {
-                    if(reservationsDB[key].userId === id) delete reservationsDB[key];
-                }
-                saveData();
-                renderStudentList();
-            }
-        };
-
-        // === 7. SISTEMA DE GUARDADO Y LOGIN ===
-        function saveData() {
-            localStorage.setItem('autoescuela_users', JSON.stringify(usersDB));
-            localStorage.setItem('autoescuela_reservations', JSON.stringify(reservationsDB));
-            renderCalendar(); 
-        }
-
-        document.getElementById('login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
+        document.getElementById('login-form').onsubmit = (e) => { 
+            e.preventDefault(); 
             const user = document.getElementById('login-user').value.toLowerCase().trim();
-            const pin = document.getElementById('login-pin').value;
-            
-            if (usersDB[user] && usersDB[user].pin === pin) {
-                currentUser = usersDB[user];
-                document.getElementById('login-screen').classList.add('hidden');
+            if(usersDB[user] && usersDB[user].pin === document.getElementById('login-pin').value) {
+                currentUser = usersDB[user]; 
+                document.getElementById('login-screen').classList.add('hidden'); 
                 document.getElementById('current-user-name').innerText = currentUser.name;
-                
-                if(currentUser.role === 'profesor') {
-                    document.getElementById('profesor-tools').classList.remove('hidden');
-                } else {
-                    document.getElementById('alumno-tools').classList.remove('hidden');
-                }
-                
-                viewDate = new Date(); 
-                renderCalendar();
-            } else {
-                alert("Usuario o PIN incorrectos.");
-            }
-        });
+                if(currentUser.role==='profesor') document.getElementById('profesor-tools').classList.remove('hidden');
+                renderCalendar(); 
+            } else alert("Error");
+        };
 
         document.getElementById('btn-logout').onclick = () => location.reload();
-        
-        // Ejecutar al iniciar
-        renderCalendar();
     </script>
 </body>
 </html>
