@@ -3,96 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autoescuela Pro - Gestor de Clases Sincronizado</title>
+    <title>Autoescuela Pro - Gestor de Clases</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
 
     <div id="login-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl">
-            <h2 class="text-xl font-extrabold mb-6 text-center">AUTOESCUELA <span class="text-amber-500">CONTROL-PRO</span></h2>
+            <div class="text-center mb-6">
+                <div class="mx-auto bg-amber-500 text-slate-950 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-car"></i></div>
+                <h2 class="text-xl font-extrabold">AUTOESCUELA <span class="text-amber-500">CONTROL-PRO</span></h2>
+            </div>
             <form id="login-form" class="space-y-4">
-                <input id="login-user" type="text" placeholder="Usuario" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3" required>
-                <input id="login-pin" type="password" maxlength="4" placeholder="PIN" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-center" required>
-                <button type="submit" class="w-full bg-amber-500 text-slate-950 font-bold py-3 rounded-xl">Entrar</button>
+                <input id="login-user" type="text" placeholder="Usuario" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 focus:ring-2 focus:ring-amber-500/50 outline-none" required>
+                <input id="login-pin" type="password" maxlength="4" placeholder="PIN (4 núm)" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-center text-lg tracking-[0.5em] focus:ring-2 focus:ring-amber-500/50 outline-none" required>
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all">Entrar</button>
             </form>
         </div>
     </div>
 
     <header class="border-b border-slate-800 bg-slate-950 px-6 py-4 flex justify-between items-center">
-        <h1 class="font-extrabold text-lg"><i class="fa-solid fa-car text-amber-500 mr-2"></i> Autoescuela</h1>
-        <button id="btn-logout" class="text-red-400 bg-red-500/10 px-4 py-2 rounded-xl text-xs font-bold">Salir</button>
+        <h1 class="font-extrabold"><i class="fa-solid fa-car text-amber-500 mr-2"></i> Autoescuela</h1>
+        <div class="flex items-center gap-4">
+            <span id="current-user-name" class="text-sm font-bold"></span>
+            <button onclick="location.reload()" class="text-red-400 text-xs font-bold bg-red-500/10 px-3 py-1.5 rounded-lg"><i class="fa-solid fa-power-off mr-1"></i> Salir</button>
+        </div>
     </header>
 
     <main class="flex-grow p-6 grid grid-cols-1 xl:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
         
         <section class="xl:col-span-1 flex flex-col gap-6">
             <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
-                <h2 class="text-xs font-bold text-slate-400 uppercase mb-4">Perfil</h2>
-                <button id="btn-manage-students" class="w-full bg-slate-800 py-3 rounded-xl text-xs font-bold hidden">Gestionar Alumnos</button>
+                <h2 class="text-xs font-bold uppercase text-slate-400 mb-4">Mi Perfil</h2>
+                <div id="profesor-tools" class="hidden space-y-3">
+                    <button id="btn-manage-students" class="w-full bg-slate-800 hover:bg-slate-700 py-3 rounded-xl text-xs font-bold">Gestionar Alumnos</button>
+                </div>
+                <div id="alumno-tools" class="hidden text-center text-sm text-slate-400">Panel de Alumno</div>
             </div>
 
             <div id="profesor-next-class-card" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl hidden">
                 <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Próxima Clase (Ticket)</p>
-                <div id="profesor-next-class-status-div" class="p-3 rounded-xl border mb-3">
-                    <p id="profesor-next-student-name" class="font-bold text-white"></p>
-                    <p class="text-xs text-slate-300" id="profesor-next-time"></p>
+                <div id="profesor-next-class-status-div" class="p-3 rounded-xl border mb-3 transition-colors">
+                    <p id="profesor-next-student-name" class="font-extrabold text-white"></p>
+                    <p class="text-xs">Hora: <span id="profesor-next-time" class="font-bold">--:--</span></p>
                 </div>
-                <button id="btn-toggle-ticket" class="w-full py-2 rounded-xl text-xs font-black transition-all"></button>
+                <button id="btn-toggle-ticket" class="w-full py-2 rounded-lg text-xs font-black transition-all"></button>
             </div>
 
             <div id="next-class-card" class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-amber-400 shadow-xl hidden">
-                <p class="text-[10px] font-bold uppercase mb-1">Tu próxima clase</p>
-                <p class="text-sm font-semibold text-white"><span id="next-class-time"></span></p>
+                <p class="text-[10px] font-bold uppercase mb-1">Tu Próxima Clase</p>
+                <p class="text-sm font-semibold text-slate-200">A las <span id="next-class-time" class="text-amber-500 font-bold"></span> del <span id="next-class-date" class="text-amber-500 font-bold"></span></p>
             </div>
         </section>
 
         <section class="xl:col-span-3 bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
             <div class="flex justify-between items-center bg-slate-900 p-2 rounded-xl mb-4">
-                <button id="btn-prev-week" class="px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold">Anterior</button>
-                <span id="month-display" class="text-sm font-black text-amber-500"></span>
-                <button id="btn-next-week" class="px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold">Siguiente</button>
+                <button id="btn-prev-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold">Anterior</button>
+                <span id="month-display" class="text-sm font-black text-amber-500">MES</span>
+                <button id="btn-next-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold">Siguiente</button>
             </div>
-            <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-xl">
-                <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 p-3 text-xs font-bold text-center"></div>
+            <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-xl min-w-[700px]">
+                <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 bg-slate-950 text-slate-300 font-bold text-xs text-center p-3"></div>
                 <div id="calendar-grid" class="divide-y divide-slate-800"></div>
             </div>
         </section>
     </main>
 
+    <div id="modal-students" class="fixed inset-0 bg-slate-950/85 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg">
+            <h3 class="font-bold text-white mb-4">Gestión de Alumnos</h3>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <input id="new-std-user" placeholder="User" class="bg-slate-950 p-2 text-xs rounded border border-slate-700">
+                <input id="new-std-name" placeholder="Nombre" class="bg-slate-950 p-2 text-xs rounded border border-slate-700">
+                <input id="new-std-pin" placeholder="PIN" maxlength="4" class="bg-slate-950 p-2 text-xs rounded border border-slate-700">
+            </div>
+            <button id="btn-add-student" class="w-full bg-emerald-500 py-2 rounded font-bold text-xs text-black">Crear Alumno</button>
+            <table class="w-full mt-4 text-xs text-left">
+                <tbody id="student-list" class="divide-y divide-slate-800"></tbody>
+            </table>
+        </div>
+    </div>
+
     <script>
-        // Lógica esencial integrada
-        let reservations = JSON.parse(localStorage.getItem('reservations')) || {};
-        let currentUser = null;
-        let viewDate = new Date();
+        const timeSlots = [
+            { id: "07:00", label: "07:00 - 07:45" }, { id: "07:45", label: "07:45 - 08:30" },
+            { id: "08:30", label: "08:30 - 09:15" }, { id: "09:15", label: "09:15 - 10:00" },
+            { id: "break", label: "10:00 - 10:30", isBreak: true }, 
+            { id: "10:30", label: "10:30 - 11:15" }, { id: "11:15", label: "11:15 - 12:00" },
+            { id: "12:00", label: "12:00 - 12:45" }, { id: "12:45", label: "12:45 - 13:30" },
+            { id: "13:30", label: "13:30 - 14:15" }, { id: "14:15", label: "14:15 - 15:00" },
+            { id: "15:00", label: "15:00 - 15:45" }, { id: "15:45", label: "15:45 - 16:30" }
+        ];
+
+        let usersDB = JSON.parse(localStorage.getItem('ae_users')) || {
+            "profesor": { id: "profesor", name: "Profesor Admin", role: "profesor", pin: "0000" },
+            "juan": { id: "juan", name: "Juan Pérez", role: "alumno", pin: "1111" }
+        };
+        let reservationsDB = JSON.parse(localStorage.getItem('ae_reservations')) || {};
+        let currentUser = null, viewDate = new Date();
 
         function renderCalendar() {
-            // Lógica de renderizado existente + Nueva lógica de tickets
-            updateUI();
+            const monday = ((d) => { let day = d.getDay(), diff = d.getDate() - day + (day == 0 ? -6:1); return new Date(d.setDate(diff)); })(new Date(viewDate));
+            const days = Array.from({length:5}, (_, i) => { let d = new Date(monday); d.setDate(d.getDate() + i); return { dateObj: d, dateStr: d.toISOString().split('T')[0] }; });
+
+            document.getElementById('month-display').innerText = monday.toLocaleDateString('es-ES', {month:'long', year:'numeric'}).toUpperCase();
+            document.getElementById('calendar-headers').innerHTML = `<div class="py-3"><i class="fa-solid fa-clock"></i></div>` + days.map(d => `<div class="py-2 uppercase">${d.dateObj.toLocaleDateString('es-ES', {weekday:'short'})}<br><span class="text-[9px]">${d.dateObj.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'})}</span></div>`).join('');
+
+            let gridHtml = '';
+            timeSlots.forEach(slot => {
+                gridHtml += `<div class="grid grid-cols-6 hover:bg-slate-800/30">` + `<div class="py-3 text-[10px] text-slate-500 font-bold border-r border-slate-800 flex items-center justify-center">${slot.label}</div>`;
+                if (slot.isBreak) gridHtml += `<div class="col-span-5 bg-slate-950 flex items-center justify-center text-[10px] text-slate-700 font-bold uppercase"><i class="fa-solid fa-mug-hot mr-2"></i> Descanso</div>`;
+                else days.forEach(day => {
+                    const cellId = `${day.dateStr}_${slot.id}`, res = reservationsDB[cellId];
+                    gridHtml += `<div class="${res ? (res.userId === currentUser.id || currentUser.role === 'profesor' ? 'bg-amber-500 text-black' : 'bg-slate-800') : 'bg-emerald-500/10 text-emerald-500'} border-r border-slate-800 p-2 cursor-pointer text-[10px] flex items-center justify-center" onclick="handleCellClick('${cellId}')">${res ? (currentUser.role === 'profesor' ? usersDB[res.userId].name : 'Reservado') : 'Libre'}</div>`;
+                });
+                gridHtml += `</div>`;
+            });
+            document.getElementById('calendar-grid').innerHTML = gridHtml;
+            renderNextClass();
         }
 
-        function updateUI() {
-            // Actualizar tarjetas de profesor y alumno
-            const profCard = document.getElementById('profesor-next-class-card');
-            const alumnoCard = document.getElementById('next-class-card');
-            
-            if (currentUser?.role === 'profesor') {
-                // Aquí iría la lógica que busca la sig. reserva y actualiza el botón ticket
-                // Ejemplo: button.onclick = () => { res.ticket = !res.ticket; save(); updateUI(); }
+        function renderNextClass() {
+            const alumnoCard = document.getElementById('next-class-card'), profCard = document.getElementById('profesor-next-class-card');
+            if (!currentUser) return;
+            const now = new Date();
+
+            if (currentUser.role === 'profesor') {
+                let next = Object.keys(reservationsDB).map(id => ({id, ...reservationsDB[id]})).filter(r => new Date(r.id.split('_')[0]) > now).sort((a,b) => new Date(a.id.split('_')[0]) - new Date(b.id.split('_')[0]))[0];
+                if (next) {
+                    document.getElementById('profesor-next-student-name').innerText = usersDB[next.userId].name;
+                    document.getElementById('profesor-next-time').innerText = next.id.split('_')[1];
+                    const statusDiv = document.getElementById('profesor-next-class-status-div'), ticketBtn = document.getElementById('btn-toggle-ticket');
+                    statusDiv.className = `p-3 rounded-xl border ${next.ticketEntregado ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400' : 'border-red-500 bg-red-500/10 text-red-400'}`;
+                    ticketBtn.className = `w-full py-2 rounded-lg text-xs font-black ${next.ticketEntregado ? 'bg-emerald-500' : 'bg-red-500'}`;
+                    ticketBtn.innerText = next.ticketEntregado ? '✔ Ticket Entregado' : '✘ Ticket Pendiente';
+                    ticketBtn.onclick = () => { next.ticketEntregado = !next.ticketEntregado; saveData(); };
+                    profCard.classList.remove('hidden');
+                } else profCard.classList.add('hidden');
+            } else {
+                let next = Object.keys(reservationsDB).filter(id => reservationsDB[id].userId === currentUser.id).map(id => ({id, ...reservationsDB[id]})).sort()[0];
+                if(next){
+                    document.getElementById('next-class-time').innerText = next.id.split('_')[1];
+                    document.getElementById('next-class-date').innerText = next.id.split('_')[0];
+                    alumnoCard.classList.remove('hidden');
+                }
             }
         }
 
-        // ... [Aquí incluirías todas tus funciones originales de Firebase y login] ...
+        function handleCellClick(cellId) {
+            if (reservationsDB[cellId]) {
+                if (confirm("¿Cancelar reserva?")) { delete reservationsDB[cellId]; saveData(); }
+            } else {
+                if (confirm("¿Reservar clase?")) { reservationsDB[cellId] = { userId: currentUser.id, ticketEntregado: false }; saveData(); }
+            }
+        }
+
+        function saveData() { localStorage.setItem('ae_users', JSON.stringify(usersDB)); localStorage.setItem('ae_reservations', JSON.stringify(reservationsDB)); renderCalendar(); }
         
-        // Navegación semanas
+        document.getElementById('login-form').onsubmit = (e) => {
+            e.preventDefault();
+            const u = document.getElementById('login-user').value, p = document.getElementById('login-pin').value;
+            if(usersDB[u] && usersDB[u].pin === p) { currentUser = usersDB[u]; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('current-user-name').innerText = currentUser.name; renderCalendar(); }
+            else alert("Error");
+        };
+
+        document.getElementById('btn-manage-students').onclick = () => document.getElementById('modal-students').classList.remove('hidden');
+        document.getElementById('btn-add-student').onclick = () => {
+            const id = document.getElementById('new-std-user').value.toLowerCase();
+            usersDB[id] = { id, name: document.getElementById('new-std-name').value, role: 'alumno', pin: document.getElementById('new-std-pin').value };
+            saveData();
+        };
+
         document.getElementById('btn-prev-week').onclick = () => { viewDate.setDate(viewDate.getDate()-7); renderCalendar(); };
         document.getElementById('btn-next-week').onclick = () => { viewDate.setDate(viewDate.getDate()+7); renderCalendar(); };
+        renderCalendar();
     </script>
 </body>
 </html>
