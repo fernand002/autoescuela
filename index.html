@@ -16,496 +16,167 @@
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
 
     <div id="login-screen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-3xl"></div>
-            
-            <div class="text-center mb-6 relative z-10">
-                <div class="mx-auto bg-amber-500 text-slate-950 w-14 h-14 rounded-2xl font-bold text-2xl flex items-center justify-center mb-3 shadow-lg shadow-amber-500/20">
-                    <i class="fa-solid fa-car"></i>
-                </div>
-                <h2 class="text-xl font-extrabold tracking-tight">AUTOESCUELA <span class="text-amber-500">CONTROL-PRO</span></h2>
-                <p class="text-xs text-slate-400 mt-1">Acceso Seguro de Alumnos y Profesores</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <div class="text-center mb-6">
+                <div class="mx-auto bg-amber-500 text-slate-950 w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mb-3"><i class="fa-solid fa-car"></i></div>
+                <h2 class="text-xl font-extrabold">AUTOESCUELA <span class="text-amber-500">CONTROL-PRO</span></h2>
             </div>
-
-            <form id="login-form" class="space-y-4 relative z-10">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1 font-bold uppercase tracking-wider">Usuario</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500"><i class="fa-solid fa-user"></i></span>
-                        <input id="login-user" type="text" placeholder="Ej: profesor o juan" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all" required>
-                    </div>
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1 font-bold uppercase tracking-wider">Contraseña (PIN)</label>
-                    <div class="relative">
-                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-500"><i class="fa-solid fa-key"></i></span>
-                        <input id="login-pin" type="password" maxlength="4" placeholder="••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 pl-10 pr-4 text-center text-lg tracking-[0.5em] font-bold focus:outline-none focus:ring-2 focus:ring-amber-500/50 transition-all" required>
-                    </div>
-                </div>
-                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-amber-500/10">
-                    Iniciar Sesión
-                </button>
+            <form id="login-form" class="space-y-4">
+                <input id="login-user" type="text" placeholder="Usuario" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 focus:ring-2 focus:ring-amber-500/50 outline-none" required>
+                <input id="login-pin" type="password" maxlength="4" placeholder="PIN (4 núm)" class="w-full bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-center text-lg tracking-[0.5em] focus:ring-2 focus:ring-amber-500/50 outline-none" required>
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-3.5 rounded-xl transition-all">Entrar</button>
             </form>
-
-            <div class="mt-6 bg-slate-950/60 border border-slate-800 p-4 rounded-xl text-xs text-slate-400">
-                <p class="font-bold text-amber-500 mb-1"><i class="fa-solid fa-circle-info"></i> Usuarios de prueba:</p>
-                <p>Profesor -> Usuario: <b>profesor</b> | PIN: <b>0000</b></p>
-                <p>Alumno -> Usuario: <b>juan</b> | PIN: <b>1111</b></p>
-            </div>
         </div>
     </div>
 
     <header class="border-b border-slate-800 bg-slate-950 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="bg-amber-500 text-slate-950 p-2 rounded-xl font-bold flex items-center justify-center">
-                <i class="fa-solid fa-car"></i>
-            </div>
-            <h1 class="text-lg font-extrabold tracking-tight">AUTOESCUELA <span class="text-amber-500">CONTROL-PRO</span></h1>
-        </div>
+        <h1 class="font-extrabold"><i class="fa-solid fa-car text-amber-500 mr-2"></i> Autoescuela</h1>
         <div class="flex items-center gap-4">
-            <div class="text-right">
-                <p class="text-[9px] text-slate-400 uppercase font-bold">Sesión Activa</p>
-                <span id="current-user-name" class="text-sm font-bold text-slate-200"></span>
-            </div>
-            <button id="btn-logout" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 px-3 py-2 rounded-xl text-xs font-bold transition-all">
-                <i class="fa-solid fa-right-from-bracket"></i> Salir
-            </button>
+            <span id="current-user-name" class="text-sm font-bold"></span>
+            <button onclick="location.reload()" class="text-red-400 text-xs font-bold bg-red-500/10 px-3 py-1.5 rounded-lg"><i class="fa-solid fa-power-off mr-1"></i> Salir</button>
         </div>
     </header>
 
-    <main class="flex-grow p-4 lg:p-6 grid grid-cols-1 xl:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
+    <main class="flex-grow p-6 grid grid-cols-1 xl:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
         
         <section class="xl:col-span-1 flex flex-col gap-6">
             <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4"><i class="fa-solid fa-id-badge text-amber-500"></i> Mi Perfil</h2>
-                
+                <h2 class="text-xs font-bold uppercase text-slate-400 mb-4">Mi Perfil</h2>
                 <div id="profesor-tools" class="hidden space-y-3">
-                    <div class="bg-amber-500/10 text-amber-500 p-3 rounded-xl border border-amber-500/20 text-center font-bold text-sm mb-4">
-                        Modo Administrador
-                    </div>
-                    <button id="btn-manage-students" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all">
-                        <i class="fa-solid fa-users-gear"></i> Gestionar Alumnos
-                    </button>
+                    <button id="btn-manage-students" class="w-full bg-slate-800 hover:bg-slate-700 py-3 rounded-xl text-xs font-bold">Gestionar Alumnos</button>
                 </div>
-                
-                <div id="alumno-tools" class="hidden text-center text-slate-300 text-sm">
-                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 mb-2">
-                        <i class="fa-solid fa-user-graduate text-xl"></i>
-                    </div>
-                    <p class="text-xs text-slate-400 mt-2">Estás viendo tus clases disponibles.</p>
-                </div>
-            </div>
-            
-            <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-4 text-xs text-blue-300 shadow-lg">
-                <i class="fa-solid fa-circle-info mb-2 text-lg"></i><br>
-                Las clases solo se pueden cancelar o modificar con <b>24h laborables</b> de antelación.
+                <div id="alumno-tools" class="hidden text-center text-sm text-slate-400">Panel de Alumno</div>
             </div>
 
-            <div id="next-class-card" class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-xs text-amber-400 shadow-lg hidden">
-                <p class="font-bold text-[10px] uppercase tracking-wider text-amber-500/70 mb-1.5">
-                    <i class="fa-solid fa-calendar-check text-amber-500 mr-1"></i> Tu Próxima Clase
-                </p>
-                <p class="text-slate-200 text-sm font-semibold">
-                    Tu siguiente clase es a las <span id="next-class-time" class="font-extrabold text-amber-500">--:--</span> el día <span id="next-class-date" class="font-extrabold text-amber-500">--/--</span>
-                </p>
+            <div id="profesor-next-class-card" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-lg hidden">
+                <p class="text-[10px] font-bold uppercase text-slate-400 mb-2">Próxima Clase</p>
+                <div id="profesor-next-class-status-div" class="p-3 rounded-xl border mb-3 transition-colors">
+                    <p id="profesor-next-student-name" class="font-extrabold text-white">--</p>
+                    <p class="text-xs">Hora: <span id="profesor-next-time" class="font-bold">--:--</span></p>
+                </div>
+                <button id="btn-toggle-ticket" class="w-full py-2 rounded-lg text-xs font-black transition-all"></button>
+            </div>
+
+            <div id="next-class-card" class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-amber-400 shadow-lg hidden">
+                <p class="text-[10px] font-bold uppercase mb-1">Tu Próxima Clase</p>
+                <p class="text-sm font-semibold text-slate-200">A las <span id="next-class-time" class="text-amber-500 font-bold"></span> del <span id="next-class-date" class="text-amber-500 font-bold"></span></p>
             </div>
         </section>
 
-        <section class="xl:col-span-3 flex flex-col">
-            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
-                
-                <div class="flex items-center justify-between bg-slate-900 border border-slate-800 p-2 rounded-xl mb-4">
-                    <button id="btn-prev-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all">
-                        <i class="fa-solid fa-chevron-left mr-1"></i> Semana Anterior
-                    </button>
-                    <div class="text-center">
-                        <span id="month-display" class="block text-sm font-black text-amber-500 uppercase tracking-widest">MES AÑO</span>
-                    </div>
-                    <button id="btn-next-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold transition-all">
-                        Semana Siguiente <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </button>
-                </div>
-
-                <div class="overflow-x-auto scrollbar-hide border border-slate-800 rounded-xl bg-slate-900">
-                    <div class="min-w-[800px]">
-                        <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 bg-slate-950 text-slate-300 font-bold text-xs text-center">
-                            </div>
-                        <div id="calendar-grid" class="divide-y divide-slate-800">
-                            </div>
-                    </div>
-                </div>
-
-                <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-400 border-t border-slate-900 pt-4">
-                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded"></div> Horario Disponible</span>
-                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-amber-500 border border-amber-600 rounded"></div> Tu Reserva</span>
-                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-800 border border-slate-700 rounded"></div> Ocupado por otro alumno</span>
-                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-950 border border-slate-800 rounded"></div> Descanso (Café)</span>
-                </div>
+        <section class="xl:col-span-3 bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
+            <div class="flex justify-between items-center bg-slate-900 p-2 rounded-xl mb-4">
+                <button id="btn-prev-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold">Anterior</button>
+                <span id="month-display" class="text-sm font-black text-amber-500">MES</span>
+                <button id="btn-next-week" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-bold">Siguiente</button>
+            </div>
+            <div class="overflow-x-auto bg-slate-900 border border-slate-800 rounded-xl min-w-[700px]">
+                <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 bg-slate-950 text-slate-300 font-bold text-xs text-center p-3"></div>
+                <div id="calendar-grid" class="divide-y divide-slate-800"></div>
             </div>
         </section>
     </main>
 
-    <div id="modal-students" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-users text-amber-500 mr-2"></i> Base de Datos de Alumnos</h3>
-                <button onclick="document.getElementById('modal-students').classList.add('hidden')" class="text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-xmark text-xl"></i></button>
+    <div id="modal-students" class="fixed inset-0 bg-slate-950/85 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg">
+            <h3 class="font-bold text-white mb-4">Gestión de Alumnos</h3>
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <input id="new-std-user" placeholder="User" class="bg-slate-950 p-2 text-xs rounded border border-slate-700">
+                <input id="new-std-name" placeholder="Nombre" class="bg-slate-950 p-2 text-xs rounded border border-slate-700">
+                <input id="new-std-pin" placeholder="PIN" maxlength="4" class="bg-slate-950 p-2 text-xs rounded border border-slate-700">
             </div>
-            
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 mb-4">
-                <h4 class="text-[10px] text-slate-400 font-bold mb-3 uppercase tracking-wider">Añadir Nuevo Alumno</h4>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
-                    <input id="new-std-user" type="text" placeholder="Usuario (ej: ana)" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500">
-                    <input id="new-std-name" type="text" placeholder="Nombre completo" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500">
-                    <input id="new-std-pin" type="text" placeholder="PIN (4 núm)" maxlength="4" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500 text-center tracking-widest">
-                </div>
-                <button id="btn-add-student" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2.5 rounded-lg text-xs transition-all shadow-lg">
-                    <i class="fa-solid fa-user-plus"></i> Crear Alumno y Dar Acceso
-                </button>
-            </div>
-
-            <div class="max-h-56 overflow-y-auto scrollbar-hide border border-slate-800 rounded-xl bg-slate-950">
-                <table class="w-full text-xs text-left text-slate-300">
-                    <thead class="uppercase text-[9px] bg-slate-900 text-slate-500 sticky top-0">
-                        <tr>
-                            <th class="p-3">Usuario</th>
-                            <th class="p-3">Nombre Completo</th>
-                            <th class="p-3">PIN Acceso</th>
-                            <th class="p-3 text-center">Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="student-list" class="divide-y divide-slate-800">
-                        </tbody>
-                </table>
-            </div>
+            <button id="btn-add-student" class="w-full bg-emerald-500 py-2 rounded font-bold text-xs text-black">Crear Alumno</button>
+            <table class="w-full mt-4 text-xs text-left">
+                <tbody id="student-list" class="divide-y divide-slate-800"></tbody>
+            </table>
         </div>
     </div>
 
     <script>
-        // === 1. CONFIGURACIÓN DE HORARIOS (45 mins + Descanso a las 10:00) ===
         const timeSlots = [
-            { id: "07:00", label: "07:00 - 07:45" },
-            { id: "07:45", label: "07:45 - 08:30" },
-            { id: "08:30", label: "08:30 - 09:15" },
-            { id: "09:15", label: "09:15 - 10:00" },
-            { id: "break", label: "10:00 - 10:30", isBreak: true }, // Descanso inamovible
-            { id: "10:30", label: "10:30 - 11:15" },
-            { id: "11:15", label: "11:15 - 12:00" },
-            { id: "12:00", label: "12:00 - 12:45" },
-            { id: "12:45", label: "12:45 - 13:30" },
-            { id: "13:30", label: "13:30 - 14:15" },
-            { id: "14:15", label: "14:15 - 15:00" },
-            { id: "15:00", label: "15:00 - 15:45" },
-            { id: "15:45", label: "15:45 - 16:30" }
+            { id: "07:00", label: "07:00 - 07:45" }, { id: "07:45", label: "07:45 - 08:30" },
+            { id: "08:30", label: "08:30 - 09:15" }, { id: "09:15", label: "09:15 - 10:00" },
+            { id: "break", label: "10:00 - 10:30", isBreak: true }, 
+            { id: "10:30", label: "10:30 - 11:15" }, { id: "11:15", label: "11:15 - 12:00" },
+            { id: "12:00", label: "12:00 - 12:45" }, { id: "12:45", label: "12:45 - 13:30" },
+            { id: "13:30", label: "13:30 - 14:15" }, { id: "14:15", label: "14:15 - 15:00" },
+            { id: "15:00", label: "15:00 - 15:45" }, { id: "15:45", label: "15:45 - 16:30" }
         ];
 
-        // === 2. BASE DE DATOS LOCAL ===
-        // Cargamos los datos guardados en el navegador o creamos los por defecto
-        let usersDB = JSON.parse(localStorage.getItem('autoescuela_users')) || {
-            "profesor": { id: "profesor", name: "Profesor Administrador", role: "profesor", pin: "0000" },
+        let usersDB = JSON.parse(localStorage.getItem('ae_users')) || {
+            "profesor": { id: "profesor", name: "Profesor Admin", role: "profesor", pin: "0000" },
             "juan": { id: "juan", name: "Juan Pérez", role: "alumno", pin: "1111" }
         };
-        let reservationsDB = JSON.parse(localStorage.getItem('autoescuela_reservations')) || {};
-        
-        let currentUser = null;
-        let viewDate = new Date(); // La fecha por la que el usuario navega
+        let reservationsDB = JSON.parse(localStorage.getItem('ae_reservations')) || {};
+        let currentUser = null, viewDate = new Date();
 
-        // === 3. LÓGICA DE TIEMPO Y LA REGLA DE 24 HORAS LABORABLES ===
-        
-        // Función para obtener el lunes de la semana actual
-        function getMonday(d) {
-            const date = new Date(d);
-            const day = date.getDay();
-            const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-            return new Date(date.setDate(diff));
-        }
-
-        // Función que calcula si faltan 24 horas saltándose los fines de semana
-        function isMoreThan24hBusiness(targetDateStr, timeStr) {
-            const [hours, minutes] = timeStr.split(':');
-            const targetDate = new Date(targetDateStr);
-            targetDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-            const now = new Date(); // La hora real en este momento
-            if (targetDate <= now) return false; // La clase ya ha pasado
-
-            let hoursDiff = 0;
-            let calcDate = new Date(now);
-
-            // Sumamos horas una a una hasta llegar a la clase
-            while (calcDate < targetDate) {
-                calcDate.setHours(calcDate.getHours() + 1);
-                // Si NO es Sábado (6) ni Domingo (0), sumamos la hora
-                if (calcDate.getDay() !== 0 && calcDate.getDay() !== 6) {
-                    hoursDiff++;
-                }
-            }
-            return hoursDiff >= 24;
-        }
-
-        // === 4. RENDERIZADO VISUAL DEL CALENDARIO Y PRÓXIMA CLASE ===
-        
         function renderCalendar() {
-            const monday = getMonday(viewDate);
-            const days = [];
-            
-            // Renderizar Mes y Año en el centro
-            const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-            document.getElementById('month-display').innerText = `${monthNames[monday.getMonth()]} ${monday.getFullYear()}`;
+            const monday = ((d) => { let day = d.getDay(), diff = d.getDate() - day + (day == 0 ? -6:1); return new Date(d.setDate(diff)); })(new Date(viewDate));
+            const days = Array.from({length:5}, (_, i) => { let d = new Date(monday); d.setDate(d.getDate() + i); return { dateObj: d, dateStr: d.toISOString().split('T')[0] }; });
 
-            // Renderizar las Cabeceras de los Días (Lunes a Viernes)
-            let headersHtml = `<div class="py-3 border-r border-slate-800 flex items-center justify-center"><i class="fa-solid fa-clock text-slate-500"></i></div>`;
-            for(let i=0; i<5; i++) {
-                let d = new Date(monday);
-                d.setDate(d.getDate() + i);
-                const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                const shortDay = d.toLocaleDateString('es-ES', {weekday: 'short'});
-                days.push({ dateObj: d, dateStr: dateStr, name: shortDay });
-                headersHtml += `<div class="py-2 border-r border-slate-800 uppercase tracking-wider">${shortDay} <br><span class="text-[10px] text-slate-500">${d.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'})}</span></div>`;
-            }
-            document.getElementById('calendar-headers').innerHTML = headersHtml;
+            document.getElementById('month-display').innerText = monday.toLocaleDateString('es-ES', {month:'long', year:'numeric'}).toUpperCase();
+            document.getElementById('calendar-headers').innerHTML = `<div class="py-3"><i class="fa-solid fa-clock"></i></div>` + days.map(d => `<div class="py-2 uppercase">${d.dateObj.toLocaleDateString('es-ES', {weekday:'short'})}<br><span class="text-[9px]">${d.dateObj.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit'})}</span></div>`).join('');
 
-            // Renderizar la Cuadrícula de Horas y Reservas
             let gridHtml = '';
             timeSlots.forEach(slot => {
-                gridHtml += `<div class="grid grid-cols-6 hover:bg-slate-800/30 transition-colors">`;
-                
-                // Columna 1: La Hora
-                gridHtml += `<div class="py-3 px-2 border-r border-slate-800 bg-slate-950/50 text-[11px] font-bold text-slate-400 text-center flex items-center justify-center">${slot.label}</div>`;
-                
-                if (slot.isBreak) {
-                    // Fila del descanso inamovible
-                    gridHtml += `<div class="col-span-5 bg-slate-950/80 border-y border-slate-800 flex items-center justify-center text-[11px] text-slate-600 font-bold tracking-widest uppercase"><i class="fa-solid fa-mug-hot mr-2 text-slate-700"></i> Descanso Programado</div>`;
-                } else {
-                    // Celdas de días
-                    days.forEach(day => {
-                        const cellId = `${day.dateStr}_${slot.id}`;
-                        const res = reservationsDB[cellId];
-                        
-                        // Determinar si la clase pertenece al pasado real
-                        const classRealDate = new Date(day.dateStr);
-                        classRealDate.setHours(parseInt(slot.id.split(':')[0]), parseInt(slot.id.split(':')[1]), 0, 0);
-                        const isPast = classRealDate < new Date();
-                        
-                        let cellClass = "border-r border-slate-800 p-2 min-h-[50px] flex items-center justify-center cursor-pointer transition-all ";
-                        let cellContent = "";
-
-                        if (res) {
-                            if (res.userId === currentUser.id || currentUser.role === 'profesor') {
-                                // Reservado por el usuario actual o el admin
-                                cellClass += "bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-[10px]";
-                                cellContent = currentUser.role === 'profesor' ? usersDB[res.userId].name : "Tu Clase";
-                            } else {
-                                // Reservado por otro alumno
-                                cellClass += "bg-slate-800 text-slate-600 cursor-not-allowed";
-                                cellContent = "Ocupado";
-                            }
-                        } else if (isPast) {
-                            // Clase que ya pasó
-                            cellClass += "bg-slate-950 opacity-50 cursor-not-allowed text-slate-700 text-[10px]";
-                            cellContent = "Pasado";
-                        } else {
-                            // Celda Libre
-                            cellClass += "bg-emerald-500/10 hover:bg-emerald-500/30 border border-emerald-500/20 text-emerald-500 font-semibold text-[10px]";
-                            cellContent = "Libre";
-                        }
-
-                        gridHtml += `<div class="${cellClass}" onclick="handleCellClick('${cellId}', '${day.dateStr}', '${slot.id}', ${!!res}, ${isPast})">${cellContent}</div>`;
-                    });
-                }
+                gridHtml += `<div class="grid grid-cols-6 hover:bg-slate-800/30">` + `<div class="py-3 text-[10px] text-slate-500 font-bold border-r border-slate-800 flex items-center justify-center">${slot.label}</div>`;
+                if (slot.isBreak) gridHtml += `<div class="col-span-5 bg-slate-950 flex items-center justify-center text-[10px] text-slate-700 font-bold uppercase"><i class="fa-solid fa-mug-hot mr-2"></i> Descanso</div>`;
+                else days.forEach(day => {
+                    const cellId = `${day.dateStr}_${slot.id}`, res = reservationsDB[cellId];
+                    gridHtml += `<div class="${res ? (res.userId === currentUser.id || currentUser.role === 'profesor' ? 'bg-amber-500 text-black' : 'bg-slate-800') : 'bg-emerald-500/10 text-emerald-500'} border-r border-slate-800 p-2 cursor-pointer text-[10px] flex items-center justify-center" onclick="handleCellClick('${cellId}')">${res ? (currentUser.role === 'profesor' ? usersDB[res.userId].name : 'Reservado') : 'Libre'}</div>`;
+                });
                 gridHtml += `</div>`;
             });
             document.getElementById('calendar-grid').innerHTML = gridHtml;
-
-            // Actualizar el panel "Tu Próxima Clase" para alumnos
             renderNextClass();
         }
 
         function renderNextClass() {
-            const card = document.getElementById('next-class-card');
-            
-            // Si es profesor o no hay usuario, ocultar
-            if (!currentUser || currentUser.role === 'profesor') {
-                card.classList.add('hidden');
-                return;
-            }
-
-            let nextClass = null;
+            const alumnoCard = document.getElementById('next-class-card'), profCard = document.getElementById('profesor-next-class-card');
+            if (!currentUser) return;
             const now = new Date();
 
-            // Buscar en todas las reservas la más cercana del alumno
-            for (let cellId in reservationsDB) {
-                const res = reservationsDB[cellId];
-                if (res.userId === currentUser.id) {
-                    const [dateStr, timeStr] = cellId.split('_');
-                    const [hours, minutes] = timeStr.split(':');
-                    const classDate = new Date(dateStr);
-                    classDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-                    // Si la clase es en el futuro
-                    if (classDate > now) {
-                        if (!nextClass || classDate < nextClass.dateObj) {
-                            nextClass = {
-                                dateObj: classDate,
-                                dateDisplay: classDate.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'}),
-                                timeDisplay: timeStr
-                            };
-                        }
-                    }
-                }
-            }
-
-            if (nextClass) {
-                document.getElementById('next-class-time').innerText = nextClass.timeDisplay;
-                document.getElementById('next-class-date').innerText = nextClass.dateDisplay;
-                card.classList.remove('hidden');
+            if (currentUser.role === 'profesor') {
+                let next = Object.keys(reservationsDB).map(id => ({id, ...reservationsDB[id]})).filter(r => new Date(r.id.split('_')[0]) > now).sort((a,b) => new Date(a.id.split('_')[0]) - new Date(b.id.split('_')[0]))[0];
+                if (next) {
+                    document.getElementById('profesor-next-student-name').innerText = usersDB[next.userId].name;
+                    document.getElementById('profesor-next-time').innerText = next.id.split('_')[1];
+                    const statusDiv = document.getElementById('profesor-next-class-status-div'), ticketBtn = document.getElementById('btn-toggle-ticket');
+                    statusDiv.className = `p-3 rounded-xl border ${next.ticketEntregado ? 'border-emerald-500 bg-emerald-500/10 text-emerald-400' : 'border-red-500 bg-red-500/10 text-red-400'}`;
+                    ticketBtn.className = `w-full py-2 rounded-lg text-xs font-black ${next.ticketEntregado ? 'bg-emerald-500' : 'bg-red-500'}`;
+                    ticketBtn.innerText = next.ticketEntregado ? '✔ Ticket Entregado' : '✘ Ticket Pendiente';
+                    ticketBtn.onclick = () => { next.ticketEntregado = !next.ticketEntregado; saveData(); };
+                    profCard.classList.remove('hidden');
+                } else profCard.classList.add('hidden');
             } else {
-                card.classList.add('hidden');
+                let next = Object.keys(reservationsDB).filter(id => reservationsDB[id].userId === currentUser.id).map(id => ({id, ...reservationsDB[id]})).sort()[0];
+                if(next){
+                    document.getElementById('next-class-time').innerText = next.id.split('_')[1];
+                    document.getElementById('next-class-date').innerText = next.id.split('_')[0];
+                    alumnoCard.classList.remove('hidden');
+                }
             }
         }
 
-        // Navegación de Semanas
-        function changeWeek(offsetDays) {
-            viewDate.setDate(viewDate.getDate() + offsetDays);
-            renderCalendar();
-        }
-        document.getElementById('btn-prev-week').onclick = () => changeWeek(-7);
-        document.getElementById('btn-next-week').onclick = () => changeWeek(7);
-
-
-        // === 5. GESTIÓN DE RESERVAS (HACER CLIC EN CELDAS) ===
-        
-        function handleCellClick(cellId, dateStr, timeStr, isBooked, isPast) {
-            // Regla: Los alumnos no pueden tocar celdas del pasado
-            if (isPast && currentUser.role !== 'profesor') return;
-            
-            const res = reservationsDB[cellId];
-
-            // Regla: Si está ocupado por otro alumno y yo soy alumno, no hago nada
-            if (isBooked && res.userId !== currentUser.id && currentUser.role !== 'profesor') return;
-
-            // Evaluamos la regla de 24 horas laborables
-            const is24hSafe = isMoreThan24hBusiness(dateStr, timeStr);
-
-            if (!isBooked) {
-                // ACCIÓN: RESERVAR
-                if (!is24hSafe && currentUser.role !== 'profesor') {
-                    alert("⚠️ ALERTA: No puedes reservar con menos de 24 horas laborables de antelación.");
-                    return;
-                }
-                if (confirm(`¿Confirmar reserva para el día ${dateStr} a las ${timeStr}?`)) {
-                    reservationsDB[cellId] = { userId: currentUser.id };
-                    saveData();
-                }
+        function handleCellClick(cellId) {
+            if (reservationsDB[cellId]) {
+                if (confirm("¿Cancelar reserva?")) { delete reservationsDB[cellId]; saveData(); }
             } else {
-                // ACCIÓN: CANCELAR
-                if (!is24hSafe && currentUser.role !== 'profesor') {
-                    alert("⚠️ ALERTA: No puedes cancelar o modificar una clase que empieza en menos de 24 horas laborables. Por favor, contacta directamente con el profesor.");
-                    return;
-                }
-                const msg = currentUser.role === 'profesor' ? `¿Liberar clase de ${usersDB[res.userId].name}?` : `¿Seguro que deseas cancelar tu clase?`;
-                if (confirm(msg)) {
-                    delete reservationsDB[cellId];
-                    saveData();
-                }
+                if (confirm("¿Reservar clase?")) { reservationsDB[cellId] = { userId: currentUser.id, ticketEntregado: false }; saveData(); }
             }
         }
 
-        // === 6. GESTIÓN DE ALUMNOS (PANEL DE ADMINISTRADOR) ===
+        function saveData() { localStorage.setItem('ae_users', JSON.stringify(usersDB)); localStorage.setItem('ae_reservations', JSON.stringify(reservationsDB)); renderCalendar(); }
         
-        document.getElementById('btn-manage-students').onclick = () => {
-            renderStudentList();
-            document.getElementById('modal-students').classList.remove('hidden');
-        }
-        
-        function renderStudentList() {
-            let html = '';
-            Object.values(usersDB).forEach(u => {
-                if(u.role === 'alumno') {
-                    html += `<tr class="hover:bg-slate-800/50">
-                        <td class="p-3 font-mono text-slate-300">${u.id}</td>
-                        <td class="p-3 font-semibold text-white">${u.name}</td>
-                        <td class="p-3 font-mono tracking-widest text-amber-500 font-bold">${u.pin}</td>
-                        <td class="p-3 text-center">
-                            <button onclick="deleteStudent('${u.id}')" class="text-red-500 hover:text-red-400 p-1.5 bg-red-500/10 rounded border border-red-500/20 transition-all" title="Eliminar Alumno">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>`;
-                }
-            });
-            document.getElementById('student-list').innerHTML = html;
-        }
-
-        document.getElementById('btn-add-student').onclick = () => {
-            const id = document.getElementById('new-std-user').value.toLowerCase().trim();
-            const name = document.getElementById('new-std-name').value.trim();
-            const pin = document.getElementById('new-std-pin').value.trim();
-            
-            if(!id || !name || pin.length !== 4) return alert("Completa todos los datos. El PIN debe tener 4 dígitos.");
-            if(usersDB[id]) return alert("Este nombre de usuario ya está registrado. Elige otro.");
-
-            usersDB[id] = { id, name, role: 'alumno', pin };
-            saveData();
-            
-            // Limpiar inputs
-            document.getElementById('new-std-user').value = '';
-            document.getElementById('new-std-name').value = '';
-            document.getElementById('new-std-pin').value = '';
-            
-            renderStudentList();
-        };
-
-        window.deleteStudent = (id) => {
-            if(confirm(`¿Estás seguro de eliminar al alumno ${usersDB[id].name}? Perderá el acceso y se borrarán todas sus reservas futuras.`)) {
-                delete usersDB[id];
-                // Limpiamos sus reservas para liberar el calendario
-                for(let key in reservationsDB) {
-                    if(reservationsDB[key].userId === id) delete reservationsDB[key];
-                }
-                saveData();
-                renderStudentList();
-            }
-        };
-
-        // === 7. SISTEMA CORE DE GUARDADO Y LOGIN ===
-        
-        function saveData() {
-            localStorage.setItem('autoescuela_users', JSON.stringify(usersDB));
-            localStorage.setItem('autoescuela_reservations', JSON.stringify(reservationsDB));
-            renderCalendar(); // Refrescar vista
-        }
-
-        document.getElementById('login-form').addEventListener('submit', (e) => {
+        document.getElementById('login-form').onsubmit = (e) => {
             e.preventDefault();
-            const user = document.getElementById('login-user').value.toLowerCase().trim();
-            const pin = document.getElementById('login-pin').value;
-            
-            // Verificar credenciales
-            if (usersDB[user] && usersDB[user].pin === pin) {
-                currentUser = usersDB[user];
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('current-user-name').innerText = currentUser.name;
-                
-                // Mostrar panel correspondiente
-                if(currentUser.role === 'profesor') {
-                    document.getElementById('profesor-tools').classList.remove('hidden');
-                } else {
-                    document.getElementById('alumno-tools').classList.remove('hidden');
-                }
-                
-                // Iniciar Calendario
-                viewDate = new Date(); // Reiniciar a la semana actual
-                renderCalendar();
-            } else {
-                alert("Usuario o PIN incorrectos. Si eres alumno y has olvidado tu PIN, contacta con tu profesor.");
-            }
-        });
-
-        document.getElementById('btn-logout').onclick = () => {
-            // Recargar página para cerrar sesión
-            location.reload();
+            const u = document.getElementById('login-user').value, p = document.getElementById('login-pin').value;
+            if(usersDB[u] && usersDB[u].pin === p) { currentUser = usersDB[u]; document.getElementById('login-screen').classList.add('hidden'); document.getElementById('current-user-name').innerText = currentUser.name; renderCalendar(); }
+            else alert("Error");
         };
+
+        document.getElementById('btn-prev-week').onclick = () => { viewDate.setDate(viewDate.getDate()-7); renderCalendar(); };
+        document.getElementById('btn-next-week').onclick = () => { viewDate.setDate(viewDate.getDate()+7); renderCalendar(); };
+        renderCalendar();
     </script>
 </body>
 </html>
