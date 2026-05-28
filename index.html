@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -102,12 +102,9 @@
             </div>
 
             <div id="profesor-next-class-card" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-xl hidden">
-                <p class="text-[10px] font-bold text-slate-400 uppercase mb-2">Próxima Clase (Ticket)</p>
-                <div id="profesor-next-class-status-div" class="p-3 rounded-xl border mb-3 transition-colors">
-                    <p id="profesor-next-student-name" class="font-extrabold text-white"></p>
-                    <p class="text-xs text-slate-400 mt-1">Hora: <span id="profesor-next-time" class="font-bold text-slate-200">--:--</span></p>
-                </div>
-                <button id="btn-toggle-ticket" class="w-full py-2 rounded-xl text-xs font-black transition-all shadow-lg"></button>
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-3">Clases Reservadas Hoy</p>
+                <div id="ticket-list-container" class="space-y-2 max-h-64 overflow-y-auto scrollbar-hide">
+                    </div>
             </div>
 
             <div id="next-class-card" class="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-xs text-amber-400 shadow-lg hidden">
@@ -148,7 +145,7 @@
                     <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded"></div> Horario Disponible</span>
                     <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-amber-500 border border-amber-600 rounded"></div> Tu Reserva</span>
                     <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-800 border border-slate-700 rounded"></div> Ocupado por otro alumno</span>
-                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-950 border border-slate-800 rounded"></div> No disponible </span>
+                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-950 border border-slate-800 rounded"></div> Descanso (Café)</span>
                 </div>
             </div>
         </section>
@@ -271,7 +268,7 @@
                 gridHtml += `<div class="py-3 px-2 border-r border-slate-800 bg-slate-950/50 text-[11px] font-bold text-slate-400 text-center flex items-center justify-center">${slot.label}</div>`;
                 
                 if (slot.isBreak) {
-                    gridHtml += `<div class="col-span-5 bg-slate-950/80 border-y border-slate-800 flex items-center justify-center text-[11px] text-slate-600 font-bold tracking-widest uppercase"><i class="fa-solid fa-mug-hot mr-2 text-slate-700"></i>  No disponible </div>`;
+                    gridHtml += `<div class="col-span-5 bg-slate-950/80 border-y border-slate-800 flex items-center justify-center text-[11px] text-slate-600 font-bold tracking-widest uppercase"><i class="fa-solid fa-mug-hot mr-2 text-slate-700"></i>  Descanso Programado</div>`;
                 } else {
                     days.forEach(day => {
                         const cellId = `${day.dateStr}_${slot.id}`;
@@ -284,7 +281,6 @@
                         let cellClass = "border-r border-slate-800 p-2 min-h-[50px] flex items-center justify-center cursor-pointer transition-all ";
                         let cellContent = "";
 
-                        // SOLUCIÓN AL BUG: Comprobar que currentUser exista
                         if (res) {
                             let isMyClass = currentUser && res.userId === currentUser.id;
                             let isProf = currentUser && currentUser.role === 'profesor';
@@ -315,60 +311,65 @@
             updateTicketPanel();
         }
 
-        // === PANEL DE TICKETS (PROFESOR) ===
+        // === PANEL DE TICKETS (PROFESOR) LÓGICA MODIFICADA ===
         function updateTicketPanel() {
             const profCard = document.getElementById('profesor-next-class-card');
+            const container = document.getElementById('ticket-list-container');
+            
             if (!currentUser || currentUser.role !== 'profesor') {
                 profCard.classList.add('hidden');
                 return;
             }
 
-            let nextReservation = null;
-            const now = new Date();
+            // Usamos el día actual (Hoy)
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-            let upcoming = [];
+            let dailyClasses = [];
             for (let cellId in reservationsDB) {
-                const res = reservationsDB[cellId];
-                const [dateStr, timeStr] = cellId.split('_');
-                const [hours, minutes] = timeStr.split(':');
-                const classDate = new Date(dateStr);
-                classDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
-
-                if (classDate > now) {
-                    upcoming.push({ id: cellId, dateObj: classDate, ...res });
+                // Filtramos solo las reservas de hoy
+                if (cellId.startsWith(todayStr)) {
+                    dailyClasses.push({ id: cellId, ...reservationsDB[cellId] });
                 }
             }
 
-            upcoming.sort((a, b) => a.dateObj - b.dateObj);
-            nextReservation = upcoming[0];
+            // Ordenamos por hora
+            dailyClasses.sort((a, b) => a.id.split('_')[1].localeCompare(b.id.split('_')[1]));
 
-            if (nextReservation) {
-                document.getElementById('profesor-next-student-name').innerText = usersDB[nextReservation.userId]?.name || "Alumno Desconocido";
-                document.getElementById('profesor-next-time').innerText = nextReservation.id.split('_')[1];
-                
-                const div = document.getElementById('profesor-next-class-status-div');
-                const btn = document.getElementById('btn-toggle-ticket');
-                
-                if (nextReservation.ticketEntregado) {
-                    div.className = "p-3 rounded-xl border border-emerald-500 bg-emerald-500/10 text-emerald-400 mb-3 transition-colors";
-                    btn.className = "w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 py-2 rounded-xl text-xs font-black transition-all shadow-lg";
-                    btn.innerText = "✔ Ticket Entregado";
-                } else {
-                    div.className = "p-3 rounded-xl border border-red-500 bg-red-500/10 text-red-400 mb-3 transition-colors";
-                    btn.className = "w-full bg-red-500 hover:bg-red-600 text-slate-900 py-2 rounded-xl text-xs font-black transition-all shadow-lg";
-                    btn.innerText = "✘ Ticket Pendiente";
-                }
-                
-                btn.onclick = () => {
-                    reservationsDB[nextReservation.id].ticketEntregado = !nextReservation.ticketEntregado;
-                    saveData();
-                };
-                
+            if (dailyClasses.length > 0) {
+                let html = '';
+                dailyClasses.forEach(res => {
+                    const studentName = usersDB[res.userId]?.name || "Alumno Desconocido";
+                    const time = res.id.split('_')[1];
+                    const isDone = res.ticketEntregado;
+                    
+                    html += `
+                        <div class="p-3 rounded-xl border ${isDone ? 'border-emerald-500 bg-emerald-500/10' : 'border-red-500 bg-red-500/10'} transition-colors">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="font-extrabold text-white text-xs">${studentName}</p>
+                                    <p class="text-[10px] text-slate-400 mt-0.5">Hora: <span class="font-bold text-slate-200">${time}</span></p>
+                                </div>
+                                <button onclick="toggleTicket('${res.id}')" class="px-3 py-1.5 rounded-lg text-xs font-black transition-all shadow-lg ${isDone ? 'bg-emerald-500 hover:bg-emerald-600 text-slate-900' : 'bg-red-500 hover:bg-red-600 text-slate-900'}">
+                                    ${isDone ? '✔ Entregado' : '✘ Pendiente'}
+                                </button>
+                            </div>
+                        </div>`;
+                });
+                container.innerHTML = html;
                 profCard.classList.remove('hidden');
             } else {
                 profCard.classList.add('hidden');
             }
         }
+
+        // Función global para manejar el cambio de ticket individual
+        window.toggleTicket = (id) => {
+            if(reservationsDB[id]) {
+                reservationsDB[id].ticketEntregado = !reservationsDB[id].ticketEntregado;
+                saveData();
+            }
+        };
 
         function renderNextClass() {
             const card = document.getElementById('next-class-card');
