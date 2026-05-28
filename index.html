@@ -134,10 +134,8 @@
 
                 <div class="overflow-x-auto scrollbar-hide border border-slate-800 rounded-xl bg-slate-900">
                     <div class="min-w-[800px]">
-                        <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 bg-slate-950 text-slate-300 font-bold text-xs text-center">
-                            </div>
-                        <div id="calendar-grid" class="divide-y divide-slate-800">
-                            </div>
+                        <div id="calendar-headers" class="grid grid-cols-6 border-b border-slate-800 bg-slate-950 text-slate-300 font-bold text-xs text-center"></div>
+                        <div id="calendar-grid" class="divide-y divide-slate-800"></div>
                     </div>
                 </div>
 
@@ -145,7 +143,7 @@
                     <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-emerald-500/10 border border-emerald-500/30 rounded"></div> Horario Disponible</span>
                     <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-amber-500 border border-amber-600 rounded"></div> Tu Reserva</span>
                     <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-800 border border-slate-700 rounded"></div> Ocupado por otro alumno</span>
-                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-950 border border-slate-800 rounded"></div> Descanso (Café)</span>
+                    <span class="flex items-center gap-1.5"><div class="w-3.5 h-3.5 bg-slate-950 border border-slate-800 rounded"></div> No disponible / Bloqueado</span>
                 </div>
             </div>
         </section>
@@ -165,9 +163,7 @@
                     <input id="new-std-name" type="text" placeholder="Nombre completo" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500">
                     <input id="new-std-pin" type="text" placeholder="PIN (4 núm)" maxlength="4" class="bg-slate-900 p-2.5 text-xs rounded-lg border border-slate-700 text-white focus:outline-none focus:border-amber-500 text-center tracking-widest">
                 </div>
-                <button id="btn-add-student" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2.5 rounded-lg text-xs transition-all shadow-lg">
-                    <i class="fa-solid fa-user-plus"></i> Crear Alumno
-                </button>
+                <button id="btn-add-student" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-900 font-bold py-2.5 rounded-lg text-xs transition-all shadow-lg"><i class="fa-solid fa-user-plus"></i> Crear Alumno</button>
             </div>
 
             <div class="max-h-56 overflow-y-auto scrollbar-hide border border-slate-800 rounded-xl bg-slate-950">
@@ -187,22 +183,33 @@
         </div>
     </div>
 
+    <div id="modal-select-student" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-user-plus text-amber-500 mr-2"></i> Asignar Clase</h3>
+                <button onclick="closeAssignModal()" class="text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <p class="text-xs text-slate-400 mb-2">Selecciona un alumno para la clase del:</p>
+            <p id="assign-slot-info" class="text-sm font-bold text-amber-500 mb-4 bg-slate-950 border border-slate-800 p-2 rounded-lg text-center"></p>
+            
+            <select id="student-select" class="w-full bg-slate-950 p-3 rounded-lg border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500 mb-5">
+                </select>
+            
+            <div class="flex gap-3">
+                <button onclick="closeAssignModal()" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-white py-2.5 rounded-lg text-xs font-bold transition-all">Cancelar</button>
+                <button id="btn-confirm-assign" class="w-1/2 bg-emerald-500 hover:bg-emerald-600 text-slate-900 py-2.5 rounded-lg text-xs font-bold transition-all shadow-lg">Confirmar Asignación</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // === 1. CONFIGURACIÓN DE HORARIOS ===
         const timeSlots = [
-            { id: "07:00", label: "07:00 - 07:45" },
-            { id: "07:45", label: "07:45 - 08:30" },
-            { id: "08:30", label: "08:30 - 09:15" },
-            { id: "09:15", label: "09:15 - 10:00" },
-            { id: "break", label: "10:00 - 10:30", isBreak: true }, 
-            { id: "10:30", label: "10:30 - 11:15" },
-            { id: "11:15", label: "11:15 - 12:00" },
-            { id: "12:00", label: "12:00 - 12:45" },
-            { id: "12:45", label: "12:45 - 13:30" },
-            { id: "13:30", label: "13:30 - 14:15" },
-            { id: "14:15", label: "14:15 - 15:00" },
-            { id: "15:00", label: "15:00 - 15:45" },
-            { id: "15:45", label: "15:45 - 16:30" }
+            { id: "07:00", label: "07:00 - 07:45" }, { id: "07:45", label: "07:45 - 08:30" }, { id: "08:30", label: "08:30 - 09:15" },
+            { id: "09:15", label: "09:15 - 10:00" }, { id: "break", label: "10:00 - 10:30", isBreak: true }, { id: "10:30", label: "10:30 - 11:15" },
+            { id: "11:15", label: "11:15 - 12:00" }, { id: "12:00", label: "12:00 - 12:45" }, { id: "12:45", label: "12:45 - 13:30" },
+            { id: "13:30", label: "13:30 - 14:15" }, { id: "14:15", label: "14:15 - 15:00" }, { id: "15:00", label: "15:00 - 15:45" }, { id: "15:45", label: "15:45 - 16:30" }
         ];
 
         // === 2. BASE DE DATOS LOCAL ===
@@ -211,9 +218,13 @@
             "juan": { id: "juan", name: "Juan Pérez", role: "alumno", pin: "1111" }
         };
         let reservationsDB = JSON.parse(localStorage.getItem('autoescuela_reservations')) || {};
-        
         let currentUser = null;
-        let viewDate = new Date(); 
+        let viewDate = new Date();
+        let pendingSlotToAssign = null; 
+
+        // NAVEGACIÓN
+        document.getElementById('btn-prev-week').onclick = () => { viewDate.setDate(viewDate.getDate() - 7); renderCalendar(); };
+        document.getElementById('btn-next-week').onclick = () => { viewDate.setDate(viewDate.getDate() + 7); renderCalendar(); };
 
         // === 3. LÓGICA DE TIEMPO Y 24 HORAS ===
         function getMonday(d) {
@@ -245,20 +256,20 @@
 
         // === 4. RENDERIZADO VISUAL DEL CALENDARIO ===
         function renderCalendar() {
+            if (!currentUser) return; 
             const monday = getMonday(viewDate);
-            const days = [];
             
             const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             document.getElementById('month-display').innerText = `${monthNames[monday.getMonth()]} ${monday.getFullYear()}`;
 
             let headersHtml = `<div class="py-3 border-r border-slate-800 flex items-center justify-center"><i class="fa-solid fa-clock text-slate-500"></i></div>`;
+            const days = [];
             for(let i=0; i<5; i++) {
                 let d = new Date(monday);
                 d.setDate(d.getDate() + i);
-                const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                const shortDay = d.toLocaleDateString('es-ES', {weekday: 'short'});
-                days.push({ dateObj: d, dateStr: dateStr, name: shortDay });
-                headersHtml += `<div class="py-2 border-r border-slate-800 uppercase tracking-wider">${shortDay} <br><span class="text-[10px] text-slate-500">${d.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'})}</span></div>`;
+                const dateStr = d.toISOString().split('T')[0];
+                days.push({ dateStr: dateStr, name: d.toLocaleDateString('es-ES', {weekday: 'short'}) });
+                headersHtml += `<div class="py-2 border-r border-slate-800 uppercase tracking-wider text-[10px]">${d.toLocaleDateString('es-ES', {weekday: 'short'})} <br>${d.getDate()}/${d.getMonth()+1}</div>`;
             }
             document.getElementById('calendar-headers').innerHTML = headersHtml;
 
@@ -268,7 +279,7 @@
                 gridHtml += `<div class="py-3 px-2 border-r border-slate-800 bg-slate-950/50 text-[11px] font-bold text-slate-400 text-center flex items-center justify-center">${slot.label}</div>`;
                 
                 if (slot.isBreak) {
-                    gridHtml += `<div class="col-span-5 bg-slate-950/80 border-y border-slate-800 flex items-center justify-center text-[11px] text-slate-600 font-bold tracking-widest uppercase"><i class="fa-solid fa-mug-hot mr-2 text-slate-700"></i>  Descanso Programado</div>`;
+                    gridHtml += `<div class="col-span-5 bg-slate-950/80 border-y border-slate-800 flex items-center justify-center text-[11px] text-slate-600 font-bold tracking-widest uppercase"><i class="fa-solid fa-mug-hot mr-2 text-slate-700"></i>  No disponible</div>`;
                 } else {
                     days.forEach(day => {
                         const cellId = `${day.dateStr}_${slot.id}`;
@@ -277,8 +288,8 @@
                         const classRealDate = new Date(day.dateStr);
                         classRealDate.setHours(parseInt(slot.id.split(':')[0]), parseInt(slot.id.split(':')[1]), 0, 0);
                         const isPast = classRealDate < new Date();
-                        
-                        let cellClass = "border-r border-slate-800 p-2 min-h-[50px] flex items-center justify-center cursor-pointer transition-all ";
+
+                        let css = "border-r border-slate-800 p-2 min-h-[50px] flex items-center justify-center cursor-pointer transition-all ";
                         let cellContent = "";
 
                         if (res) {
@@ -286,21 +297,27 @@
                             let isProf = currentUser && currentUser.role === 'profesor';
 
                             if (isMyClass || isProf) {
-                                cellClass += "bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-[10px]";
-                                cellContent = isProf ? (usersDB[res.userId]?.name || "Desconocido") : "Tu Clase";
+                                // Si es el profesor quien bloqueó el horario (asignado a sí mismo)
+                                if (isProf && res.userId === currentUser.id) {
+                                    css += "bg-slate-700 text-white font-bold hover:bg-slate-600";
+                                    cellContent = "Bloqueado";
+                                } else {
+                                    css += "bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold";
+                                    cellContent = isProf ? (usersDB[res.userId]?.name || "Desconocido") : "Tu Clase";
+                                }
                             } else {
-                                cellClass += "bg-slate-800 text-slate-600 cursor-not-allowed";
+                                css += "bg-slate-800 text-slate-600 cursor-not-allowed";
                                 cellContent = "Ocupado";
                             }
                         } else if (isPast) {
-                            cellClass += "bg-slate-950 opacity-50 cursor-not-allowed text-slate-700 text-[10px]";
+                            css += "bg-slate-950 opacity-50 cursor-not-allowed text-slate-700";
                             cellContent = "Pasado";
                         } else {
-                            cellClass += "bg-emerald-500/10 hover:bg-emerald-500/30 border border-emerald-500/20 text-emerald-500 font-semibold text-[10px]";
+                            css += "bg-emerald-500/10 hover:bg-emerald-500/30 border border-emerald-500/20 text-emerald-500 font-semibold";
                             cellContent = "Libre";
                         }
 
-                        gridHtml += `<div class="${cellClass}" onclick="handleCellClick('${cellId}', '${day.dateStr}', '${slot.id}', ${!!res}, ${isPast})">${cellContent}</div>`;
+                        gridHtml += `<div class="${css} text-[10px] text-center" onclick="handleCellClick('${cellId}', '${day.dateStr}', '${slot.id}', ${!!res}, ${isPast})">${cellContent}</div>`;
                     });
                 }
                 gridHtml += `</div>`;
@@ -311,7 +328,7 @@
             updateTicketPanel();
         }
 
-        // === PANEL DE TICKETS (PROFESOR) LÓGICA MODIFICADA ===
+        // === PANEL DE TICKETS (PROFESOR) MUESTRA TODAS LAS DEL DÍA ===
         function updateTicketPanel() {
             const profCard = document.getElementById('profesor-next-class-card');
             const container = document.getElementById('ticket-list-container');
@@ -321,19 +338,17 @@
                 return;
             }
 
-            // Usamos el día actual (Hoy)
             const today = new Date();
             const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
             let dailyClasses = [];
             for (let cellId in reservationsDB) {
-                // Filtramos solo las reservas de hoy
-                if (cellId.startsWith(todayStr)) {
+                // Filtramos solo las reservas de hoy (ignorando si es el profesor bloqueando)
+                if (cellId.startsWith(todayStr) && reservationsDB[cellId].userId !== currentUser.id) {
                     dailyClasses.push({ id: cellId, ...reservationsDB[cellId] });
                 }
             }
 
-            // Ordenamos por hora
             dailyClasses.sort((a, b) => a.id.split('_')[1].localeCompare(b.id.split('_')[1]));
 
             if (dailyClasses.length > 0) {
@@ -363,7 +378,6 @@
             }
         }
 
-        // Función global para manejar el cambio de ticket individual
         window.toggleTicket = (id) => {
             if(reservationsDB[id]) {
                 reservationsDB[id].ticketEntregado = !reservationsDB[id].ticketEntregado;
@@ -371,13 +385,94 @@
             }
         };
 
-        function renderNextClass() {
-            const card = document.getElementById('next-class-card');
+        // === MODAL DE ASIGNACIÓN (SÓLO PROFESOR) ===
+        function openAssignModal(cellId, dateStr, timeStr) {
+            pendingSlotToAssign = cellId;
+            document.getElementById('assign-slot-info').innerText = `${dateStr} a las ${timeStr}`;
             
-            if (!currentUser || currentUser.role === 'profesor') {
-                card.classList.add('hidden');
+            let selectHtml = `<option value="">-- Selecciona un alumno matriculado --</option>`;
+            Object.values(usersDB).forEach(u => {
+                if(u.role === 'alumno') {
+                    selectHtml += `<option value="${u.id}">${u.name} (Usuario: ${u.id})</option>`;
+                }
+            });
+            selectHtml += `<option value="${currentUser.id}">🚫 Bloquear hora (No disponible)</option>`;
+            
+            document.getElementById('student-select').innerHTML = selectHtml;
+            document.getElementById('modal-select-student').classList.remove('hidden');
+        }
+
+        function closeAssignModal() {
+            document.getElementById('modal-select-student').classList.add('hidden');
+            pendingSlotToAssign = null;
+        }
+
+        document.getElementById('btn-confirm-assign').onclick = () => {
+            const studentId = document.getElementById('student-select').value;
+            if(!studentId) {
+                alert("Por favor, selecciona un alumno de la lista o elige bloquear la hora.");
                 return;
             }
+            
+            const studentName = studentId === currentUser.id ? "BLOQUEAR LA HORA (Solo tú lo verás)" : usersDB[studentId].name;
+            const confirmMsg = `Estás a punto de asignar la clase a:\n${studentName}\n\n¿Estás seguro de que deseas realizar esta acción? ¿Es correcto?`;
+            
+            if(confirm(confirmMsg)) {
+                reservationsDB[pendingSlotToAssign] = { userId: studentId, ticketEntregado: false };
+                saveData();
+                closeAssignModal();
+            }
+        };
+
+        // === 5. GESTIÓN DE RESERVAS (CLICS EN EL CALENDARIO) ===
+        function handleCellClick(cellId, dateStr, timeStr, isBooked, isPast) {
+            if (!currentUser) return;
+
+            if (isPast && currentUser.role !== 'profesor') return;
+            
+            const res = reservationsDB[cellId];
+            if (isBooked && res && res.userId !== currentUser.id && currentUser.role !== 'profesor') return;
+
+            const is24hSafe = isMoreThan24hBusiness(dateStr, timeStr);
+
+            if (!isBooked) {
+                if (currentUser.role === 'profesor') {
+                    openAssignModal(cellId, dateStr, timeStr);
+                } else {
+                    if (!is24hSafe) {
+                        alert("⚠️ ALERTA: No puedes reservar con menos de 24 horas laborables de antelación.");
+                        return;
+                    }
+                    if (confirm(`Estás a punto de reservar una clase para el día ${dateStr} a las ${timeStr}.\n\n¿Estás seguro de que deseas realizar esta acción? ¿Es correcto?`)) {
+                        reservationsDB[cellId] = { userId: currentUser.id, ticketEntregado: false };
+                        saveData();
+                    }
+                }
+            } else {
+                if (!is24hSafe && currentUser.role !== 'profesor') {
+                    alert("⚠️ ALERTA: No puedes cancelar una clase que empieza en menos de 24 horas laborables. Contacta con tu profesor.");
+                    return;
+                }
+                
+                let msg = '';
+                if (currentUser.role === 'profesor') {
+                    const studentName = res.userId === currentUser.id ? "TI (Bloqueo de horario)" : (usersDB[res.userId]?.name || "Desconocido");
+                    msg = `Estás a punto de CANCELAR y liberar la clase de:\n${studentName}\n(Día ${dateStr} a las ${timeStr}).\n\n¿Estás seguro de realizar esta acción? ¿Es correcto?`;
+                } else {
+                    msg = `Estás a punto de CANCELAR tu reserva del día ${dateStr} a las ${timeStr}.\n\n¿Estás seguro de realizar esta acción? ¿Es correcto?`;
+                }
+                
+                if (confirm(msg)) {
+                    delete reservationsDB[cellId];
+                    saveData();
+                }
+            }
+        }
+
+        // Lógica Próxima Clase Alumno
+        function renderNextClass() {
+            const card = document.getElementById('next-class-card');
+            if (!currentUser || currentUser.role === 'profesor') { card.classList.add('hidden'); return; }
 
             let nextClass = null;
             const now = new Date();
@@ -401,58 +496,11 @@
                     }
                 }
             }
-
             if (nextClass) {
                 document.getElementById('next-class-time').innerText = nextClass.timeDisplay;
                 document.getElementById('next-class-date').innerText = nextClass.dateDisplay;
                 card.classList.remove('hidden');
-            } else {
-                card.classList.add('hidden');
-            }
-        }
-
-        // === EVENTOS DE NAVEGACIÓN ===
-        document.getElementById('btn-prev-week').addEventListener('click', () => {
-            viewDate.setDate(viewDate.getDate() - 7);
-            renderCalendar();
-        });
-
-        document.getElementById('btn-next-week').addEventListener('click', () => {
-            viewDate.setDate(viewDate.getDate() + 7);
-            renderCalendar();
-        });
-
-        // === 5. GESTIÓN DE RESERVAS ===
-        function handleCellClick(cellId, dateStr, timeStr, isBooked, isPast) {
-            if (!currentUser) return;
-
-            if (isPast && currentUser.role !== 'profesor') return;
-            
-            const res = reservationsDB[cellId];
-            if (isBooked && res && res.userId !== currentUser.id && currentUser.role !== 'profesor') return;
-
-            const is24hSafe = isMoreThan24hBusiness(dateStr, timeStr);
-
-            if (!isBooked) {
-                if (!is24hSafe && currentUser.role !== 'profesor') {
-                    alert("⚠️ ALERTA: No puedes reservar con menos de 24 horas laborables de antelación.");
-                    return;
-                }
-                if (confirm(`¿Confirmar reserva para el día ${dateStr} a las ${timeStr}?`)) {
-                    reservationsDB[cellId] = { userId: currentUser.id, ticketEntregado: false };
-                    saveData();
-                }
-            } else {
-                if (!is24hSafe && currentUser.role !== 'profesor') {
-                    alert("⚠️ ALERTA: No puedes cancelar una clase que empieza en menos de 24 horas laborables.");
-                    return;
-                }
-                const msg = currentUser.role === 'profesor' ? `¿Liberar clase de ${usersDB[res.userId]?.name}?` : `¿Seguro que deseas cancelar tu clase?`;
-                if (confirm(msg)) {
-                    delete reservationsDB[cellId];
-                    saveData();
-                }
-            }
+            } else { card.classList.add('hidden'); }
         }
 
         // === 6. GESTIÓN DE ALUMNOS (PANEL PROFESOR) ===
@@ -465,7 +513,7 @@
             let html = '';
             Object.values(usersDB).forEach(u => {
                 if(u.role === 'alumno') {
-                    html += `<tr class="hover:bg-slate-800/50">
+                    html += `<tr class="hover:bg-slate-800/50 border-b border-slate-800">
                         <td class="p-3 font-mono text-slate-300">${u.id}</td>
                         <td class="p-3 font-semibold text-white">${u.name}</td>
                         <td class="p-3 font-mono tracking-widest text-amber-500 font-bold">${u.pin}</td>
@@ -488,18 +536,18 @@
             if(!id || !name || pin.length !== 4) return alert("Completa todos los datos. El PIN debe tener 4 dígitos.");
             if(usersDB[id]) return alert("Este nombre de usuario ya está registrado.");
 
-            usersDB[id] = { id, name, role: 'alumno', pin };
-            saveData();
-            
-            document.getElementById('new-std-user').value = '';
-            document.getElementById('new-std-name').value = '';
-            document.getElementById('new-std-pin').value = '';
-            
-            renderStudentList();
+            if(confirm(`¿Estás seguro de crear al alumno ${name}?\n\n¿Es correcto?`)) {
+                usersDB[id] = { id, name, role: 'alumno', pin };
+                saveData();
+                document.getElementById('new-std-user').value = '';
+                document.getElementById('new-std-name').value = '';
+                document.getElementById('new-std-pin').value = '';
+                renderStudentList();
+            }
         };
 
         window.deleteStudent = (id) => {
-            if(confirm(`¿Eliminar al alumno ${usersDB[id].name}?`)) {
+            if(confirm(`Estás a punto de ELIMINAR permanentemente al alumno ${usersDB[id].name}.\n\n¿Estás seguro de realizar esta acción? ¿Es correcto?`)) {
                 delete usersDB[id];
                 for(let key in reservationsDB) {
                     if(reservationsDB[key].userId === id) delete reservationsDB[key];
@@ -539,7 +587,11 @@
             }
         });
 
-        document.getElementById('btn-logout').onclick = () => location.reload();
+        document.getElementById('btn-logout').onclick = () => {
+            if(confirm("¿Estás seguro de que deseas cerrar sesión?")) {
+                location.reload();
+            }
+        };
         
         // Ejecutar al iniciar
         renderCalendar();
