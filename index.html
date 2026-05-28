@@ -79,20 +79,28 @@
             <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 shadow-xl">
                 <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4"><i class="fa-solid fa-id-badge text-amber-500"></i> Mi Perfil</h2>
                 
-                <div id="profesor-tools" class="hidden space-y-3">
-                    <div class="bg-amber-500/10 text-amber-500 p-3 rounded-xl border border-amber-500/20 text-center font-bold text-sm mb-4">
+                <div id="profesor-tools" class="hidden flex-col gap-3">
+                    <div class="bg-amber-500/10 text-amber-500 p-3 rounded-xl border border-amber-500/20 text-center font-bold text-sm mb-2">
                         Modo Administrador
                     </div>
                     <button id="btn-manage-students" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all">
                         <i class="fa-solid fa-users-gear"></i> Gestionar Alumnos
                     </button>
+                    <p class="text-[10px] text-slate-500 text-center mt-2 border-t border-slate-800 pt-3">
+                        <i class="fa-solid fa-lightbulb text-amber-500"></i> <b>Tip:</b> Haz clic en la cabecera de un día en el calendario para marcarlo como <b>Día de Examen</b>.
+                    </p>
                 </div>
                 
-                <div id="alumno-tools" class="hidden text-center text-slate-300 text-sm">
-                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 mb-2">
-                        <i class="fa-solid fa-user-graduate text-xl"></i>
+                <div id="alumno-tools" class="hidden flex-col">
+                    <div class="text-center text-slate-300 text-sm mb-4">
+                        <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20 mb-2">
+                            <i class="fa-solid fa-user-graduate text-xl"></i>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2">Estás viendo tus clases disponibles.</p>
                     </div>
-                    <p class="text-xs text-slate-400 mt-2">Estás viendo tus clases disponibles.</p>
+                    <button id="btn-view-history" class="w-full bg-slate-800 hover:bg-slate-700 text-amber-500 py-3 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all border border-slate-700">
+                        <i class="fa-solid fa-list-check"></i> Ver Mi Historial
+                    </button>
                 </div>
             </div>
             
@@ -149,10 +157,21 @@
         </section>
     </main>
 
+    <div id="modal-student-history" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl flex flex-col max-h-[80vh]">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-book-open text-amber-500 mr-2"></i> Mi Historial</h3>
+                <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            <div id="student-history-list" class="flex-grow overflow-y-auto scrollbar-hide pr-2">
+                </div>
+        </div>
+    </div>
+
     <div id="modal-students" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-users text-amber-500 mr-2"></i> Base de Datos de Alumnos</h3>
+                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-users text-amber-500 mr-2"></i> Base de Datos</h3>
                 <button onclick="document.getElementById('modal-students').classList.add('hidden')" class="text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
@@ -218,6 +237,8 @@
             "juan": { id: "juan", name: "Juan Pérez", role: "alumno", pin: "1111" }
         };
         let reservationsDB = JSON.parse(localStorage.getItem('autoescuela_reservations')) || {};
+        let examDaysDB = JSON.parse(localStorage.getItem('autoescuela_exams')) || {}; // NUEVA BBDD DE EXÁMENES
+        
         let currentUser = null;
         let viewDate = new Date();
         let pendingSlotToAssign = null; 
@@ -267,9 +288,23 @@
             for(let i=0; i<5; i++) {
                 let d = new Date(monday);
                 d.setDate(d.getDate() + i);
-                const dateStr = d.toISOString().split('T')[0];
+                const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
                 days.push({ dateStr: dateStr, name: d.toLocaleDateString('es-ES', {weekday: 'short'}) });
-                headersHtml += `<div class="py-2 border-r border-slate-800 uppercase tracking-wider text-[10px]">${d.toLocaleDateString('es-ES', {weekday: 'short'})} <br>${d.getDate()}/${d.getMonth()+1}</div>`;
+                
+                // LÓGICA DE DÍA DE EXAMEN
+                const isExamDay = examDaysDB[dateStr];
+                const examBadge = isExamDay ? `<div class="mt-1.5 bg-red-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded shadow-[0_0_8px_rgba(220,38,38,0.5)] animate-pulse">🔴 EXAMEN</div>` : '';
+                
+                // Si es profesor, la cabecera es clicable
+                const headerAction = currentUser.role === 'profesor' 
+                    ? `onclick="toggleExamDay('${dateStr}')" class="py-2 border-r border-slate-800 uppercase tracking-wider text-[10px] cursor-pointer hover:bg-slate-800 transition-colors relative"`
+                    : `class="py-2 border-r border-slate-800 uppercase tracking-wider text-[10px] relative"`;
+
+                headersHtml += `<div ${headerAction}>
+                    ${d.toLocaleDateString('es-ES', {weekday: 'short'})} <br>
+                    <span class="text-slate-400 font-bold">${d.getDate()}/${d.getMonth()+1}</span>
+                    ${examBadge}
+                </div>`;
             }
             document.getElementById('calendar-headers').innerHTML = headersHtml;
 
@@ -297,7 +332,6 @@
                             let isProf = currentUser && currentUser.role === 'profesor';
 
                             if (isMyClass || isProf) {
-                                // Si es el profesor quien bloqueó el horario (asignado a sí mismo)
                                 if (isProf && res.userId === currentUser.id) {
                                     css += "bg-slate-700 text-white font-bold hover:bg-slate-600";
                                     cellContent = "Bloqueado";
@@ -328,7 +362,22 @@
             updateTicketPanel();
         }
 
-        // === PANEL DE TICKETS (PROFESOR) MUESTRA TODAS LAS DEL DÍA ===
+        // LÓGICA DE DÍA DE EXAMEN
+        window.toggleExamDay = (dateStr) => {
+            if (currentUser.role !== 'profesor') return;
+            const isCurrentlyExam = examDaysDB[dateStr];
+            const msg = isCurrentlyExam 
+                ? `¿Estás seguro de que quieres QUITAR la marca de EXAMEN para el día ${dateStr}?\n\n¿Es correcta esta acción?`
+                : `¿Estás seguro de que quieres MARCAR el día ${dateStr} como DÍA DE EXAMEN?\n(Aparecerá un aviso visual para los alumnos).\n\n¿Es correcta esta acción?`;
+            
+            if (confirm(msg)) {
+                if (isCurrentlyExam) delete examDaysDB[dateStr];
+                else examDaysDB[dateStr] = true;
+                saveData();
+            }
+        };
+
+        // === PANEL DE TICKETS (PROFESOR) ===
         function updateTicketPanel() {
             const profCard = document.getElementById('profesor-next-class-card');
             const container = document.getElementById('ticket-list-container');
@@ -343,7 +392,6 @@
 
             let dailyClasses = [];
             for (let cellId in reservationsDB) {
-                // Filtramos solo las reservas de hoy (ignorando si es el profesor bloqueando)
                 if (cellId.startsWith(todayStr) && reservationsDB[cellId].userId !== currentUser.id) {
                     dailyClasses.push({ id: cellId, ...reservationsDB[cellId] });
                 }
@@ -469,7 +517,67 @@
             }
         }
 
-        // Lógica Próxima Clase Alumno
+        // === 6. HISTORIAL DEL ALUMNO ===
+        document.getElementById('btn-view-history').onclick = () => {
+            renderStudentHistory();
+            document.getElementById('modal-student-history').classList.remove('hidden');
+        };
+
+        window.closeHistoryModal = () => {
+            document.getElementById('modal-student-history').classList.add('hidden');
+        };
+
+        function renderStudentHistory() {
+            const listContainer = document.getElementById('student-history-list');
+            const now = new Date();
+            let upcoming = [];
+            let completed = [];
+
+            for (let cellId in reservationsDB) {
+                const res = reservationsDB[cellId];
+                if (res.userId === currentUser.id) {
+                    const [dateStr, timeStr] = cellId.split('_');
+                    const [hours, minutes] = timeStr.split(':');
+                    const classDate = new Date(dateStr);
+                    classDate.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+                    const item = { dateStr, timeStr, dateObj: classDate, ticketEntregado: res.ticketEntregado };
+                    if (classDate > now) upcoming.push(item);
+                    else completed.push(item);
+                }
+            }
+
+            upcoming.sort((a, b) => a.dateObj - b.dateObj);
+            completed.sort((a, b) => b.dateObj - a.dateObj); // Las más recientes primero
+
+            let html = '<h4 class="text-[10px] font-bold text-amber-500 mb-2 uppercase tracking-widest border-b border-amber-500/20 pb-1">Próximas Clases</h4>';
+            if (upcoming.length === 0) html += '<p class="text-xs text-slate-500 mb-4 italic">No tienes clases futuras reservadas.</p>';
+            upcoming.forEach(c => {
+                html += `<div class="bg-slate-950 p-3 rounded-xl border border-slate-800 mb-2 flex justify-between items-center shadow-lg">
+                    <span class="text-sm font-bold text-white"><i class="fa-regular fa-calendar text-slate-500 mr-2"></i>${c.dateStr}</span>
+                    <span class="text-xs bg-amber-500/10 text-amber-500 px-3 py-1.5 rounded-lg font-bold border border-amber-500/20">${c.timeStr}</span>
+                </div>`;
+            });
+
+            html += '<h4 class="text-[10px] font-bold text-emerald-500 mb-2 mt-6 uppercase tracking-widest border-b border-emerald-500/20 pb-1">Clases Completadas</h4>';
+            if (completed.length === 0) html += '<p class="text-xs text-slate-500 italic">Aún no hay clases completadas.</p>';
+            completed.forEach(c => {
+                const statusIcon = c.ticketEntregado 
+                    ? '<span class="text-[10px] text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded font-bold"><i class="fa-solid fa-check mr-1"></i> Validada</span>' 
+                    : '<span class="text-[10px] text-slate-400 bg-slate-800 px-2 py-1 rounded font-bold"><i class="fa-solid fa-clock mr-1"></i> Pendiente</span>';
+                
+                html += `<div class="bg-slate-950 p-3 rounded-xl border border-slate-800 opacity-80 mb-2 flex justify-between items-center">
+                    <span class="text-sm font-bold text-slate-300"><i class="fa-solid fa-check text-emerald-500/50 mr-2"></i>${c.dateStr}</span>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-slate-400 font-bold">${c.timeStr}</span>
+                        ${statusIcon}
+                    </div>
+                </div>`;
+            });
+
+            listContainer.innerHTML = html;
+        }
+
         function renderNextClass() {
             const card = document.getElementById('next-class-card');
             if (!currentUser || currentUser.role === 'profesor') { card.classList.add('hidden'); return; }
@@ -487,11 +595,7 @@
 
                     if (classDate > now) {
                         if (!nextClass || classDate < nextClass.dateObj) {
-                            nextClass = {
-                                dateObj: classDate,
-                                dateDisplay: classDate.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'}),
-                                timeDisplay: timeStr
-                            };
+                            nextClass = { dateObj: classDate, dateDisplay: classDate.toLocaleDateString('es-ES', {day: '2-digit', month: '2-digit'}), timeDisplay: timeStr };
                         }
                     }
                 }
@@ -503,7 +607,7 @@
             } else { card.classList.add('hidden'); }
         }
 
-        // === 6. GESTIÓN DE ALUMNOS (PANEL PROFESOR) ===
+        // === 7. GESTIÓN DE ALUMNOS BASE DE DATOS ===
         document.getElementById('btn-manage-students').onclick = () => {
             renderStudentList();
             document.getElementById('modal-students').classList.remove('hidden');
@@ -557,10 +661,11 @@
             }
         };
 
-        // === 7. SISTEMA DE GUARDADO Y LOGIN ===
+        // === 8. SISTEMA DE GUARDADO Y LOGIN ===
         function saveData() {
             localStorage.setItem('autoescuela_users', JSON.stringify(usersDB));
             localStorage.setItem('autoescuela_reservations', JSON.stringify(reservationsDB));
+            localStorage.setItem('autoescuela_exams', JSON.stringify(examDaysDB)); // Guarda días examen
             renderCalendar(); 
         }
 
@@ -576,8 +681,10 @@
                 
                 if(currentUser.role === 'profesor') {
                     document.getElementById('profesor-tools').classList.remove('hidden');
+                    document.getElementById('profesor-tools').classList.add('flex');
                 } else {
                     document.getElementById('alumno-tools').classList.remove('hidden');
+                    document.getElementById('alumno-tools').classList.add('flex');
                 }
                 
                 viewDate = new Date(); 
